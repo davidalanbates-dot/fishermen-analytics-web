@@ -70,7 +70,7 @@ export async function HeroBlock({ block, locale }: BlockProps<'hero'>) {
   const links = block.links ?? []
 
   return (
-    <section className="hero">
+    <section className={block.brandingArea ? 'hero' : 'hero page-hero'}>
       <div className="wrap">
         {block.brandingArea ? (
           <div className="brand-zone">

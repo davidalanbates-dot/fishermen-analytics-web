@@ -40,15 +40,18 @@ export async function EnquiryFormBlock({ block, locale }: BlockProps<'enquiryFor
     <section className="section" id="enquiry">
       <div className="wrap">
         <div className="enquiry-box">
-          <div>
-            <p className="kicker">{d.kickers.contact}</p>
-            {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
-            {block.intro || settings.replyTime ? (
-              <p className="intro">
-                {block.intro} {settings.replyTime}
-              </p>
-            ) : null}
-          </div>
+          {/* Without a heading or intro (e.g. on Contact) the form takes the full width */}
+          {block.heading || block.intro || settings.replyTime ? (
+            <div>
+              <p className="kicker">{d.kickers.contact}</p>
+              {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
+              {block.intro || settings.replyTime ? (
+                <p className="intro">
+                  {block.intro} {settings.replyTime}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
           <EnquiryFormClient
             formId={form.id}
             fields={toFields(form)}

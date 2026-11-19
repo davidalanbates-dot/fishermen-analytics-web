@@ -731,7 +731,7 @@ const PAGES = [
       hero(
         'Services',
         'Data first. Then everything else.',
-        'Data Analytics and SEO/GEO are where we started and what we are known for. Our creative, video, social, web and media work is built on the same insight.',
+        'Five things we make, and two layers that run through all of them: data that shapes the work, and search that gets it found on Google and in AI answers.',
       ),
       { blockType: 'services' },
       {

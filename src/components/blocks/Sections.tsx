@@ -13,6 +13,7 @@ import {
   getLogoClients,
   getServices,
   getSiteSettings,
+  hasCaseStudyPage,
   mediaUrl,
   populated,
 } from '@/lib/payload'
@@ -73,28 +74,30 @@ export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
   return (
     <section className="section">
       <div className="wrap">
-        <div className="svc-top">
-          <div className="svc-head">
-            <p className="kicker">{d.kickers.services}</p>
-            {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
-            {block.intro ? <p className="svc-intro">{block.intro}</p> : null}
+        {block.heading || block.intro || block.showGame ? (
+          <div className="svc-top">
+            <div className="svc-head">
+              <p className="kicker">{d.kickers.services}</p>
+              {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
+              {block.intro ? <p className="svc-intro">{block.intro}</p> : null}
+            </div>
+            {block.showGame ? (
+              <GameLoader
+                listId="services-list"
+                contactHref={localePath(locale, '/contact')}
+                text={d.game}
+                services={services.map((s) => ({
+                  id: s.id,
+                  label: s.gameLabel || s.title,
+                  title: s.title,
+                  summary: s.summary,
+                  href: href(s.slug),
+                  icon: isPixelIcon(s.gameIcon) ? s.gameIcon : 'analytics',
+                }))}
+              />
+            ) : null}
           </div>
-          {block.showGame ? (
-            <GameLoader
-              listId="services-list"
-              contactHref={localePath(locale, '/contact')}
-              text={d.game}
-              services={services.map((s) => ({
-                id: s.id,
-                label: s.gameLabel || s.title,
-                title: s.title,
-                summary: s.summary,
-                href: href(s.slug),
-                icon: isPixelIcon(s.gameIcon) ? s.gameIcon : 'analytics',
-              }))}
-            />
-          ) : null}
-        </div>
+        ) : null}
 
         <table className="layers" id="services-list">
           <caption className="sr-only">{d.layers.caption}</caption>
@@ -157,21 +160,58 @@ export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
   )
 }
 
-function WorkCard({ c, locale }: { c: CaseStudy; locale: BlockProps<'featuredWork'>['locale'] }) {
+/**
+ * A case study card. Links to the full story when it's written; otherwise a "coming soon"
+ * card, so unfinished case studies still show the client and result without a dead link.
+ */
+export function WorkCard({
+  c,
+  locale,
+  showServices = false,
+}: {
+  c: CaseStudy
+  locale: BlockProps<'featuredWork'>['locale']
+  showServices?: boolean
+}) {
   const d = t(locale)
   const award = populated(c.award)
   const meta = [
     populated(c.client)?.name,
     award ? `${d.result[award.result]}, ${d.shows[award.show] || award.showName || ''}` : null,
+    c.sharedCredit ? d.withIntegrated : null,
   ]
     .filter(Boolean)
     .join(' · ')
-  return (
-    <Link href={localePath(locale, `/work/${c.slug}`)} className="work-card">
+  const services = showServices
+    ? (c.services ?? []).map((s) => populated(s)?.title).filter(Boolean)
+    : []
+  const body = (
+    <>
       {c.headline?.value ? <span className="num">{c.headline.value}</span> : null}
       {c.headline?.label ? <span className="label">{c.headline.label}</span> : null}
       <span className="meta">{meta}</span>
       <h3>{c.title}</h3>
+      {services.length ? (
+        <span className="tags">
+          {services.map((name) => (
+            <span key={name}>{name}</span>
+          ))}
+        </span>
+      ) : null}
+    </>
+  )
+  if (!hasCaseStudyPage(c)) {
+    return (
+      <div className="work-card soft">
+        {body}
+        <span className="soon">{d.inner.comingSoon}</span>
+      </div>
+    )
+  }
+  return (
+    <Link href={localePath(locale, `/work/${c.slug}`)} className="work-card">
+      {body}
+      {showServices ? <span className="more">{d.inner.readCase}</span> : null}
     </Link>
   )
 }

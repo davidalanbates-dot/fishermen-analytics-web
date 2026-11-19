@@ -3,7 +3,18 @@ import { cache } from 'react'
 
 import config from '@/payload.config'
 import type { Locale } from '@/i18n/config'
-import type { Award, CaseStudy, Client, Media, Page, Service, SiteSetting } from '@/payload-types'
+import type {
+  Award,
+  CaseStudy,
+  Client,
+  Insight,
+  Job,
+  Media,
+  Page,
+  Service,
+  SiteSetting,
+  Team,
+} from '@/payload-types'
 
 export const getPayloadClient = cache(() => getPayload({ config }))
 
@@ -14,6 +25,7 @@ export const getPage = cache(async (slug: string, locale: Locale): Promise<Page 
     collection: 'pages',
     where: { slug: { equals: slug } },
     locale,
+    overrideAccess: false,
     depth: 2,
     limit: 1,
   })
@@ -25,6 +37,7 @@ export const getServices = cache(async (locale: Locale): Promise<Service[]> => {
   const { docs } = await payload.find({
     collection: 'services',
     locale,
+    overrideAccess: false,
     sort: 'order',
     depth: 0,
     limit: 20,
@@ -39,6 +52,7 @@ export const getFeaturedCaseStudies = cache(async (locale: Locale): Promise<Case
     collection: 'case-studies',
     where: { featured: { equals: true } },
     locale,
+    overrideAccess: false,
     sort: 'order',
     depth: 1,
     limit: 3,
@@ -51,6 +65,7 @@ export const getAwards = cache(async (locale: Locale): Promise<Award[]> => {
   const { docs } = await payload.find({
     collection: 'awards',
     locale,
+    overrideAccess: false,
     sort: 'order',
     depth: 0,
     limit: 50,
@@ -63,6 +78,7 @@ export const getLogoClients = cache(async (): Promise<Client[]> => {
   const { docs } = await payload.find({
     collection: 'clients',
     where: { and: [{ showLogo: { equals: true } }, { logo: { exists: true } }] },
+    overrideAccess: false,
     sort: 'order',
     depth: 1,
     limit: 50,
@@ -72,7 +88,97 @@ export const getLogoClients = cache(async (): Promise<Client[]> => {
 
 export const getSiteSettings = cache(async (locale: Locale): Promise<SiteSetting> => {
   const payload = await getPayloadClient()
-  return payload.findGlobal({ slug: 'site-settings', locale, depth: 1 })
+  return payload.findGlobal({ slug: 'site-settings', locale, depth: 1, overrideAccess: false })
+})
+
+// ---- Inner pages ----
+// Every public query runs with access control on (overrideAccess: false), exactly as an
+// anonymous visitor: drafts and internal-only fields (award client/year/level) never come back.
+
+async function findOne<T>(
+  collection: 'services' | 'case-studies' | 'insights',
+  slug: string,
+  locale: Locale,
+  depth = 1,
+) {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection,
+    where: { slug: { equals: slug } },
+    locale,
+    overrideAccess: false,
+    depth,
+    limit: 1,
+  })
+  return (docs[0] as T | undefined) ?? null
+}
+
+export const getService = cache((slug: string, locale: Locale) =>
+  findOne<Service>('services', slug, locale, 0),
+)
+
+export const getCaseStudies = cache(async (locale: Locale): Promise<CaseStudy[]> => {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'case-studies',
+    locale,
+    overrideAccess: false,
+    sort: 'order',
+    depth: 1,
+    limit: 100,
+  })
+  return docs
+})
+
+export const getCaseStudy = cache((slug: string, locale: Locale) =>
+  findOne<CaseStudy>('case-studies', slug, locale, 2),
+)
+
+/** A case study has its own page once its story is written (challenge filled in). */
+export const hasCaseStudyPage = (c: Pick<CaseStudy, 'challenge'>) => Boolean(c.challenge)
+
+export const getTeam = cache(async (locale: Locale): Promise<Team[]> => {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'team',
+    where: { showOnAbout: { equals: true } },
+    locale,
+    overrideAccess: false,
+    sort: 'order',
+    depth: 1,
+    limit: 50,
+  })
+  return docs
+})
+
+export const getInsights = cache(async (locale: Locale): Promise<Insight[]> => {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'insights',
+    locale,
+    overrideAccess: false,
+    sort: '-publishedAt',
+    depth: 1,
+    limit: 100,
+  })
+  return docs
+})
+
+export const getInsight = cache((slug: string, locale: Locale) =>
+  findOne<Insight>('insights', slug, locale, 2),
+)
+
+export const getOpenJobs = cache(async (locale: Locale): Promise<Job[]> => {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'jobs',
+    where: { open: { equals: true } },
+    locale,
+    overrideAccess: false,
+    depth: 0,
+    limit: 50,
+  })
+  return docs
 })
 
 /** Narrow a relationship field (id or populated doc) to the populated doc. */
