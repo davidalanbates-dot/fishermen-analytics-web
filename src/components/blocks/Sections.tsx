@@ -3,6 +3,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import Link from 'next/link'
 
 import { GameLoader } from '@/components/game/GameLoader'
+import { isPixelIcon } from '@/components/game/icons'
 
 import { localePath } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
@@ -76,6 +77,7 @@ export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
                 summary: s.summary,
                 href: localePath(locale, `/services/${s.slug}`),
                 core: Boolean(s.core),
+                icon: isPixelIcon(s.gameIcon) ? s.gameIcon : 'analytics',
               }))}
             />
           ) : null}

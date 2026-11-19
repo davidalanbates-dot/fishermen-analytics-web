@@ -22,6 +22,21 @@ export const Services: CollectionConfig = {
         description: 'Short label shown on the block in the homepage game, e.g. "SEO/GEO".',
       },
     },
+    {
+      name: 'gameIcon',
+      type: 'select',
+      defaultValue: 'analytics',
+      admin: { description: 'Pixel icon on this service’s buoy in the homepage game.' },
+      options: [
+        { label: 'Bar chart', value: 'analytics' },
+        { label: 'Magnifier', value: 'seo' },
+        { label: 'Pen', value: 'creative' },
+        { label: 'Play button', value: 'video' },
+        { label: 'Browser window', value: 'web' },
+        { label: 'Chat bubble', value: 'social' },
+        { label: 'Megaphone', value: 'media' },
+      ],
+    },
     { name: 'summary', type: 'textarea', required: true, localized: true, maxLength: 220 },
     {
       name: 'items',

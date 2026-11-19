@@ -474,6 +474,10 @@ export interface Service {
    * Short label shown on the block in the homepage game, e.g. "SEO/GEO".
    */
   gameLabel?: string | null;
+  /**
+   * Pixel icon on this service’s buoy in the homepage game.
+   */
+  gameIcon?: ('analytics' | 'seo' | 'creative' | 'video' | 'web' | 'social' | 'media') | null;
   summary: string;
   items?:
     | {
@@ -1256,6 +1260,7 @@ export interface PagesSelect<T extends boolean = true> {
 export interface ServicesSelect<T extends boolean = true> {
   title?: T;
   gameLabel?: T;
+  gameIcon?: T;
   summary?: T;
   items?:
     | T

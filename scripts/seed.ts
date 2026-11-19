@@ -93,6 +93,7 @@ async function upsertMedia(payload: Payload, file: string, alt: string): Promise
 const SERVICES = [
   {
     slug: 'data-analytics',
+    gameIcon: 'analytics',
     title: 'Data Analytics',
     gameLabel: 'Data Analytics',
     core: true,
@@ -107,6 +108,7 @@ const SERVICES = [
   },
   {
     slug: 'seo-geo',
+    gameIcon: 'seo',
     title: 'SEO / GEO Optimisation',
     gameLabel: 'SEO/GEO',
     core: true,
@@ -121,6 +123,7 @@ const SERVICES = [
   },
   {
     slug: 'creative-production',
+    gameIcon: 'creative',
     title: 'Creative Production',
     gameLabel: 'Creative',
     summary: 'Campaign ideas, design and copy built on what the data says about your audience.',
@@ -133,6 +136,7 @@ const SERVICES = [
   },
   {
     slug: 'video-production',
+    gameIcon: 'video',
     title: 'Video Production',
     gameLabel: 'Video',
     summary:
@@ -146,6 +150,7 @@ const SERVICES = [
   },
   {
     slug: 'website-development',
+    gameIcon: 'web',
     title: 'Website Development',
     gameLabel: 'Web Dev',
     summary: 'Fast, measurable websites and CMS builds, ready for search and AI from day one.',
@@ -158,6 +163,7 @@ const SERVICES = [
   },
   {
     slug: 'social-media-management',
+    gameIcon: 'social',
     title: 'Social Media Management',
     gameLabel: 'Social Media',
     summary: 'Always-on content, community management and reporting across your social channels.',
@@ -170,6 +176,7 @@ const SERVICES = [
   },
   {
     slug: 'media-management',
+    gameIcon: 'media',
     title: 'Media Management',
     gameLabel: 'Media',
     summary:
@@ -510,6 +517,7 @@ for (const [i, s] of SERVICES.entries()) {
     {
       title: s.title,
       gameLabel: s.gameLabel,
+      gameIcon: s.gameIcon,
       summary: s.summary,
       items: s.items.map((item) => ({ item })),
       slug: s.slug,

@@ -1,4 +1,5 @@
 import type { Dictionary } from '@/i18n/dictionary'
+import type { PixelIcon } from './icons'
 
 export type GameService = {
   id: number
@@ -7,6 +8,7 @@ export type GameService = {
   summary: string
   href: string
   core: boolean
+  icon: PixelIcon
 }
 
 export type GameText = Dictionary['game']

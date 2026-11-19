@@ -5,20 +5,23 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { track } from '@/lib/analytics'
 import { GameTitle } from './GameTitle'
+import { ICON_CELLS } from './icons'
 import type { GameProps, GameService } from './types'
 
 /**
  * "Cast for our services": an original arcade game for the homepage.
  *
  * The boat rides a rolling sea. As the swell lifts and tilts it, its pixel shots fly along
- * the tilt, so timing a shot to the slope of a wave lets you hit blocks that are not directly
- * above you. The sea gets rougher with every catch. Each catch shows that service; catching
+ * the tilt, so timing a shot to the slope of a wave lets you hit targets that are not directly
+ * above you. Each service is a buoy with a pixel icon riding a far swell higher up; both seas
+ * get rougher with every catch, and a hit bursts the buoy into pixels. Each catch shows that service; catching
  * all seven within the round ends on a "Let's talk" call to action.
  * (Rolling-wave mechanic inspired by classic boat shooters; the game, art and content are ours.)
  *
  * Loaded only when someone presses Play (see GameLoader), so it adds nothing to page load.
  * Controls: arrow keys + Space/Up, mouse move + click, or touch drag + tap. Escape stops.
- * Reduced motion: a calm sea, a level boat that fires straight up, and blocks that stay still.
+ * Reduced motion: calm seas, a level boat that fires straight up, and buoys that stay still.
+ * Phones show five buoys at a time; the rest drift in as buoys are hit.
  */
 
 const ROUND_SECONDS = 30
@@ -40,20 +43,31 @@ const COLORS = {
   sky: '#00A2E8',
   ink: '#000000',
   trail: 'rgba(255, 242, 0, 0.45)',
+  farSea: '#052b3c',
+  farCrest: 'rgba(0, 162, 232, 0.55)',
+  line: '#f2f5f7',
 }
 
-type Block = {
+/** A service buoy riding the far swell. y and tilt follow the wave under it each frame. */
+type Buoy = {
   s: GameService
   x: number
   y: number
-  w: number
-  h: number
   vx: number
-  phase: number
-  bob: number
+  tilt: number
+  active: boolean // on screen (phones show fewer at a time; the rest drift in later)
+  entering: boolean // still drifting in from off screen
   caught: boolean
 }
 type Shot = { x: number; y: number; vx: number; vy: number }
+type Spark = { x: number; y: number; vx: number; vy: number; life: number; color: string }
+
+const FAR_SWELL_START = 7 // far swell height (px); it roughens with each catch too
+const FAR_SWELL_PER_CATCH = 1.6
+const FAR_SWELL_MAX = 18
+const BUOY_HALF = 22 // half the buoy's width
+const BUOY_GAP = 58 // minimum distance between neighbouring buoys
+const ICON_PX = 3 // size of one icon pixel on a buoy
 type Phase = 'title' | 'playing' | 'won' | 'lost'
 
 export function ServicesGame({
@@ -110,9 +124,13 @@ export function ServicesGame({
     let ended = false
     let swell = reduceMotion ? 0 : SWELL_START
     let targetSwell = swell
+    let farSwell = reduceMotion ? 0 : FAR_SWELL_START
+    let targetFarSwell = farSwell
     const keys: Record<string, boolean> = {}
     let shots: Shot[] = []
-    let blocks: Block[] = []
+    let sparks: Spark[] = []
+    let buoys: Buoy[] = []
+    let nextEntrySide = -1
     const boat = { x: 0, y: 0, w: 64, tilt: 0 }
 
     // ---- The sea ----
@@ -128,34 +146,62 @@ export function ServicesGame({
       )
     }
 
-    /**
-     * Blocks swim in lanes (3 rows), each at its own speed and direction, so they spread
-     * out and bunch up like fish. Together they cover roughly 60% of the width.
-     */
+    // ---- The far swell the buoys ride, higher up the screen ----
+    const farLevel = () => H * 0.47
+    const farY = (x: number) => {
+      if (farSwell === 0) return farLevel()
+      const k = (Math.PI * 2) / Math.max(200, W * 0.47)
+      return (
+        farLevel() +
+        farSwell * Math.sin(k * x - clock * 1.2 + 0.6) +
+        farSwell * 0.3 * Math.sin(k * 2.6 * x + clock * 0.9 + 1)
+      )
+    }
+
+    /** How many buoys fit on screen at once: all seven on desktop, five on phones. */
+    const maxActive = () => (W < 440 ? 5 : services.length)
+    const speedFor = (i: number) => 38 + ((i * 29) % 34) // 38–72 px/s, varied but repeatable
+
+    /** Spread the first buoys evenly along the far swell; the rest wait off screen. */
     function layout() {
-      const pad = 14
-      const top = 46
-      const lanes = 3
-      const bh = 32
-      const perLane = Math.ceil(services.length / lanes)
-      const slot = (W - pad * 2) / perLane
-      const bw = Math.max(78, Math.min(124, slot * 0.6))
-      blocks = services.map((s, i) => {
-        const lane = i % lanes
-        const col = Math.floor(i / lanes)
-        const speed = 45 + ((i * 37) % 40) // 45–85 px/s, varied but repeatable
-        return {
-          s,
-          x: pad + col * slot + (slot - bw) / 2 + (lane % 2) * slot * 0.35,
-          y: top + lane * (bh + 14),
-          w: bw,
-          h: bh,
-          vx: (lane % 2 === 0 ? 1 : -1) * speed,
-          phase: i * 1.3,
-          bob: 0,
-          caught: false,
-        }
-      })
+      const n = Math.min(maxActive(), services.length)
+      buoys = services.map((s, i) => ({
+        s,
+        x: i < n ? ((i + 0.5) * W) / n : -60,
+        y: 0,
+        vx: (i % 2 === 0 ? 1 : -1) * speedFor(i),
+        tilt: 0,
+        active: i < n,
+        entering: false,
+        caught: false,
+      }))
+    }
+
+    /** After a catch on a phone, the next waiting buoy drifts in from alternating sides. */
+    function bringInNext() {
+      const waiting = buoys.find((b) => !b.active && !b.caught)
+      if (!waiting) return
+      const i = buoys.indexOf(waiting)
+      nextEntrySide *= -1
+      waiting.active = true
+      waiting.entering = true
+      waiting.x = nextEntrySide < 0 ? -BUOY_HALF - 10 : W + BUOY_HALF + 10
+      waiting.vx = (nextEntrySide < 0 ? 1 : -1) * speedFor(i)
+    }
+
+    function burst(x: number, y: number, color: string) {
+      for (let i = 0; i < 18; i++) {
+        const a = Math.random() * Math.PI * 2
+        const v = 80 + Math.random() * 160
+        sparks.push({
+          x,
+          y,
+          vx: Math.cos(a) * v,
+          vy: Math.sin(a) * v - 60,
+          life: 0.55 + Math.random() * 0.25,
+          color: i % 3 === 0 ? '#f2f5f7' : color,
+        })
+      }
     }
 
     function resize() {
@@ -225,19 +271,80 @@ export function ServicesGame({
         c.stroke()
       }
 
-      // Blocks
-      c.font = `600 ${W < 440 ? 11.5 : 13}px ${fontFamily}`
+      // Buoys riding the far swell, each leaning with the wave under it
+      for (const b of buoys) {
+        if (!b.active || b.caught) continue
+        const body = b.s.core ? COLORS.yellow : COLORS.sky
+        const shade = b.s.core ? '#b8ad00' : '#00719f'
+        c.save()
+        c.translate(b.x, b.y)
+        c.rotate(b.tilt)
+        c.fillStyle = COLORS.line
+        c.fillRect(-2, -52, 4, 18) // mast
+        c.fillStyle = b.s.core ? COLORS.line : COLORS.yellow
+        c.fillRect(-5, -56, 10, 6) // lamp
+        roundRect(-21, -36, 42, 40, 6) // body
+        c.fillStyle = body
+        c.fill()
+        c.fillStyle = shade
+        c.fillRect(16, -30, 5, 34) // shading on one side
+        c.fillStyle = COLORS.ink
+        for (const [x, y] of ICON_CELLS[b.s.icon]) {
+          c.fillRect(-13.5 + x * ICON_PX, -30 + y * ICON_PX, ICON_PX, ICON_PX)
+        }
+        c.fillStyle = COLORS.line
+        c.fillRect(-24, 2, 48, 8) // float collar at the waterline
+        c.restore()
+      }
+
+      // The far sea, in front of the buoys so they sit in the water
+      c.fillStyle = COLORS.farSea
+      c.beginPath()
+      c.moveTo(0, H)
+      for (let x = 0; x <= W; x += 6) c.lineTo(x, farY(x))
+      c.lineTo(W, H)
+      c.closePath()
+      c.globalAlpha = 0.94
+      c.fill()
+      c.globalAlpha = 1
+      c.strokeStyle = COLORS.farCrest
+      c.lineWidth = 1.5
+      c.beginPath()
+      for (let x = 0; x <= W; x += 6) {
+        const y = farY(x)
+        if (x === 0) c.moveTo(x, y)
+        else c.lineTo(x, y)
+      }
+      c.stroke()
+
+      // Name tags above the buoys, kept level so they stay readable
+      c.font = `700 ${W < 440 ? 10.5 : 11}px ${fontFamily}`
       c.textAlign = 'center'
       c.textBaseline = 'middle'
-      for (const b of blocks) {
-        if (b.caught) continue
-        const y = b.y + b.bob
-        roundRect(b.x, y, b.w, b.h, 6)
-        c.fillStyle = b.s.core ? COLORS.yellow : COLORS.sky
+      // Neighbouring tags alternate between two heights so they never overlap
+      const tagged = buoys.filter((b) => b.active && !b.caught).sort((a, b) => a.x - b.x)
+      tagged.forEach((b, rank) => {
+        const tw = c.measureText(b.s.label).width + 14
+        const ty = b.y - 70 - (rank % 2) * 22
+        const tx = Math.max(tw / 2 + 4, Math.min(W - tw / 2 - 4, b.x)) // keep on screen
+        if (rank % 2) {
+          c.fillStyle = 'rgba(242, 245, 247, 0.35)'
+          c.fillRect(b.x - 0.5, ty + 9, 1, 12) // short leader line down to the lamp
+        }
+        roundRect(tx - tw / 2, ty - 9, tw, 18, 9)
+        c.fillStyle = 'rgba(0, 0, 0, 0.6)'
         c.fill()
-        c.fillStyle = COLORS.ink
-        c.fillText(b.s.label, b.x + b.w / 2, y + b.h / 2 + 1, b.w - 10)
+        c.fillStyle = COLORS.line
+        c.fillText(b.s.label, tx, ty + 0.5)
+      })
+
+      // Pixel burst from a hit buoy
+      for (const p of sparks) {
+        c.globalAlpha = Math.max(0, Math.min(1, p.life / 0.4))
+        c.fillStyle = p.color
+        c.fillRect(Math.round(p.x) - 2, Math.round(p.y) - 2, 4, 4)
       }
+      c.globalAlpha = 1
 
       // Pixel shots: a square "pixel" with a two-step trail, snapped to the pixel grid
       for (const s of shots) {
@@ -338,22 +445,57 @@ export function ServicesGame({
       boat.x = Math.max(boat.w / 2 + 6, Math.min(W - boat.w / 2 - 6, boat.x))
       updateBoat(dt)
 
-      // Blocks swim their lanes, bounce off the sides and bob; they speed up a little per catch
-      const live = blocks.filter((b) => !b.caught)
+      // The far swell roughens too
+      farSwell += (targetFarSwell - farSwell) * Math.min(1, dt * 1.5)
+
+      // Buoys drift along the far swell, bounce off the sides and keep their distance;
+      // they speed up a little with each catch
+      const live = buoys.filter((b) => b.active && !b.caught)
       if (!reduceMotion) {
-        const pace = 1 + (total - live.length) * 0.08
+        const pace = 1 + caughtCount * 0.06
         for (const b of live) {
-          b.x += b.vx * pace * dt
-          if (b.x < 8) {
-            b.x = 8
+          b.x += b.vx * pace * (b.entering ? 2.2 : 1) * dt // newcomers drift in quickly
+          if (b.entering) {
+            if (b.x > BUOY_HALF + 4 && b.x < W - BUOY_HALF - 4) b.entering = false
+          } else if (b.x < BUOY_HALF + 4) {
+            b.x = BUOY_HALF + 4
             b.vx = Math.abs(b.vx)
-          } else if (b.x + b.w > W - 8) {
-            b.x = W - 8 - b.w
+          } else if (b.x > W - BUOY_HALF - 4) {
+            b.x = W - BUOY_HALF - 4
             b.vx = -Math.abs(b.vx)
           }
-          b.bob = Math.sin(clock * 1.7 + b.phase) * 6
+        }
+        // Neighbours that get too close bounce apart
+        const row = [...live].sort((a, b) => a.x - b.x)
+        for (let i = 1; i < row.length; i++) {
+          const a = row[i - 1]
+          const b = row[i]
+          if (b.x - a.x < BUOY_GAP) {
+            const push = (BUOY_GAP - (b.x - a.x)) / 2
+            a.x -= push
+            b.x += push
+            if (a.vx > 0 || b.vx < 0) {
+              a.vx = -Math.abs(a.vx)
+              b.vx = Math.abs(b.vx)
+            }
+          }
         }
       }
+      // Each buoy sits on the wave under it and leans with its slope
+      for (const b of live) {
+        b.y = farY(b.x)
+        const slope = (farY(b.x + 6) - farY(b.x - 6)) / 12
+        b.tilt = Math.max(-0.5, Math.min(0.5, Math.atan(slope)))
+      }
+
+      // Pixel burst particles
+      for (const p of sparks) {
+        p.x += p.vx * dt
+        p.y += p.vy * dt
+        p.vy += 420 * dt
+        p.life -= dt
+      }
+      sparks = sparks.filter((p) => p.life > 0)
 
       // Shots fly in a straight line along the angle they were fired at
       for (const s of shots) {
@@ -362,20 +504,28 @@ export function ServicesGame({
       }
       shots = shots.filter((s) => {
         if (s.y < -10 || s.x < -10 || s.x > W + 10) return false
+        // Hit area: the buoy's body and mast (not the name tag)
         const hit = live.find(
           (b) =>
             !b.caught &&
-            s.x > b.x &&
-            s.x < b.x + b.w &&
-            s.y > b.y + b.bob - 2 &&
-            s.y < b.y + b.bob + b.h + 2,
+            s.x > b.x - BUOY_HALF &&
+            s.x < b.x + BUOY_HALF &&
+            s.y > b.y - 58 &&
+            s.y < b.y + 6,
         )
         if (!hit) return true
         hit.caught = true
         caughtCount += 1
         catchTimer = 3.5
-        if (!reduceMotion)
+        burst(hit.x, hit.y - 16, hit.s.core ? COLORS.yellow : COLORS.sky)
+        bringInNext()
+        if (!reduceMotion) {
           targetSwell = Math.min(SWELL_MAX, SWELL_START + caughtCount * SWELL_PER_CATCH)
+          targetFarSwell = Math.min(
+            FAR_SWELL_MAX,
+            FAR_SWELL_START + caughtCount * FAR_SWELL_PER_CATCH,
+          )
+        }
         setCaught(caughtCount)
         setLastCatch(hit.s)
         track('services_game_catch', { service: hit.s.title, caught: caughtCount })
