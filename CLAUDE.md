@@ -127,5 +127,5 @@ The site is the agency's own SEO/GEO showcase: Core Web Vitals pass on mobile; s
 - Email address, phone number, reply time for the enquiry form; confirm office address.
 - Team photos and bios.
 - Whether fishermen.co will link to fishermen-analytics.com.
-- Before launch (code): email enquiries to Site settings › Enquiry recipients (not wired yet); refresh pages on publish (now up to 60 s).
+- Enquiry emails are built (19 Nov 2026): the team adds a Resend account and key, verifies the domain in Resend, and fills Site settings › Enquiry recipients. Publishing now updates the live site straight away.
 - Mobile Core Web Vitals check: run PageSpeed Insights on the live domain after launch (not run locally).

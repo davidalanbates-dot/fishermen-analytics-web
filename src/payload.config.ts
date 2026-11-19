@@ -22,6 +22,8 @@ import { Services } from './collections/Services'
 import { Team } from './collections/Team'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
+import { emailEnquiry } from './hooks/emailEnquiry'
+import { revalidateHooks, withGlobalRevalidate, withRevalidate } from './hooks/revalidate'
 import { previewCollections, previewUrl } from './lib/previewUrl'
 
 const filename = fileURLToPath(import.meta.url)
@@ -29,7 +31,6 @@ const dirname = path.dirname(filename)
 
 const siteName = 'Fishermen Analytics'
 
-/** Make the SEO plugin's title, description and image editable per language. */
 /** Adds the Preview button (opens the draft on the site) to collections that have pages. */
 const withPreview = (collection: CollectionConfig): CollectionConfig =>
   previewCollections.includes(collection.slug)
@@ -42,6 +43,7 @@ const withPreview = (collection: CollectionConfig): CollectionConfig =>
       }
     : collection
 
+/** Make the SEO plugin's title, description and image editable per language. */
 const localizeSeoFields = ({ defaultFields }: { defaultFields: Field[] }): Field[] =>
   defaultFields.map((field) =>
     'name' in field && ['title', 'description', 'image'].includes(field.name)
@@ -76,19 +78,11 @@ export default buildConfig({
     // Untranslated BM fields show the English text until the team translates them.
     fallback: true,
   },
-  collections: [
-    Pages,
-    Services,
-    CaseStudies,
-    Awards,
-    Insights,
-    Team,
-    Clients,
-    Jobs,
-    Media,
-    Users,
-  ].map(withPreview),
-  globals: [SiteSettings],
+  collections: [Pages, Services, CaseStudies, Awards, Insights, Team, Clients, Jobs, Media, Users]
+    .map(withPreview)
+    // Publishing refreshes the live site; logins don't change any page
+    .map((c) => (c.slug === Users.slug ? c : withRevalidate(c))),
+  globals: [SiteSettings].map(withGlobalRevalidate),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -118,11 +112,12 @@ export default buildConfig({
     }),
     formBuilderPlugin({
       fields: { payment: false, state: false, country: false },
-      formOverrides: { admin: { group: 'Enquiries' } },
+      formOverrides: { admin: { group: 'Enquiries' }, hooks: revalidateHooks },
       formSubmissionOverrides: {
         labels: { singular: 'Enquiry', plural: 'Enquiries' },
         admin: { group: 'Enquiries' },
         access: { read: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
+        hooks: { afterChange: [emailEnquiry] },
       },
     }),
     vercelBlobStorage({

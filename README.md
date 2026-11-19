@@ -61,6 +61,11 @@ Pages, Services, Case studies, Insights and Jobs have two preview options in the
 
 Both open `/next/preview`, which only works for someone logged in to the CMS and switches on draft mode. A yellow bar marks draft mode; "Exit preview" returns to the published page. Visitors always see published content. Preview follows the language being edited (BM opens the `/ms/` page).
 
+### Publishing and enquiry emails
+
+- **Publishing updates the live site straight away.** Saving a draft changes nothing for visitors. No setup needed.
+- **Enquiry emails:** each enquiry is saved under Enquiries in the CMS, then emailed to everyone in Site settings › Contact › Enquiry recipients. Replying to the email answers the sender. Sending needs `RESEND_API_KEY` in Vercel and the domain verified in Resend; without the key, enquiries are still saved and the email is only written to the server log.
+
 ## Useful commands
 
 | Command                          | Does                                                              |
