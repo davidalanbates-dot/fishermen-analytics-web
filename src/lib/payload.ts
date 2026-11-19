@@ -1,3 +1,4 @@
+import { draftMode, headers } from 'next/headers'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
@@ -14,9 +15,25 @@ import type {
   Service,
   SiteSetting,
   Team,
+  User,
 } from '@/payload-types'
 
 export const getPayloadClient = cache(() => getPayload({ config }))
+
+/**
+ * CMS preview: in Next.js draft mode (switched on by /next/preview for a logged-in CMS user),
+ * queries run as that user and return the latest draft. Everyone else gets published content.
+ */
+export const previewArgs = cache(async (): Promise<{ draft?: true; user?: User }> => {
+  try {
+    if (!(await draftMode()).isEnabled) return {}
+  } catch {
+    return {} // outside a request (build-time sitemap, scripts)
+  }
+  const payload = await getPayloadClient()
+  const { user } = await payload.auth({ headers: await headers() })
+  return user ? { draft: true, user: user as User } : {}
+})
 
 /** Published page by slug, in the requested language (BM falls back to English). */
 export const getPage = cache(async (slug: string, locale: Locale): Promise<Page | null> => {
@@ -26,6 +43,7 @@ export const getPage = cache(async (slug: string, locale: Locale): Promise<Page 
     where: { slug: { equals: slug } },
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     depth: 2,
     limit: 1,
   })
@@ -38,6 +56,7 @@ export const getServices = cache(async (locale: Locale): Promise<Service[]> => {
     collection: 'services',
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 0,
     limit: 20,
@@ -53,6 +72,7 @@ export const getFeaturedCaseStudies = cache(async (locale: Locale): Promise<Case
     where: { featured: { equals: true } },
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 1,
     limit: 3,
@@ -66,6 +86,7 @@ export const getAwards = cache(async (locale: Locale): Promise<Award[]> => {
     collection: 'awards',
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 0,
     limit: 50,
@@ -79,6 +100,7 @@ export const getLogoClients = cache(async (): Promise<Client[]> => {
     collection: 'clients',
     where: { and: [{ showLogo: { equals: true } }, { logo: { exists: true } }] },
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 1,
     limit: 50,
@@ -88,12 +110,19 @@ export const getLogoClients = cache(async (): Promise<Client[]> => {
 
 export const getSiteSettings = cache(async (locale: Locale): Promise<SiteSetting> => {
   const payload = await getPayloadClient()
-  return payload.findGlobal({ slug: 'site-settings', locale, depth: 1, overrideAccess: false })
+  return payload.findGlobal({
+    slug: 'site-settings',
+    locale,
+    depth: 1,
+    overrideAccess: false,
+    ...(await previewArgs()),
+  })
 })
 
 // ---- Inner pages ----
 // Every public query runs with access control on (overrideAccess: false), exactly as an
 // anonymous visitor: drafts and internal-only fields (award client/year/level) never come back.
+// The one exception is CMS preview (previewArgs above), for logged-in CMS users only.
 
 async function findOne<T>(
   collection: 'services' | 'case-studies' | 'insights',
@@ -107,6 +136,7 @@ async function findOne<T>(
     where: { slug: { equals: slug } },
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     depth,
     limit: 1,
   })
@@ -123,6 +153,7 @@ export const getCaseStudies = cache(async (locale: Locale): Promise<CaseStudy[]>
     collection: 'case-studies',
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 1,
     limit: 100,
@@ -144,6 +175,7 @@ export const getTeam = cache(async (locale: Locale): Promise<Team[]> => {
     where: { showOnAbout: { equals: true } },
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: 'order',
     depth: 1,
     limit: 50,
@@ -157,6 +189,7 @@ export const getInsights = cache(async (locale: Locale): Promise<Insight[]> => {
     collection: 'insights',
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     sort: '-publishedAt',
     depth: 1,
     limit: 100,
@@ -175,6 +208,7 @@ export const getOpenJobs = cache(async (locale: Locale): Promise<Job[]> => {
     where: { open: { equals: true } },
     locale,
     overrideAccess: false,
+    ...(await previewArgs()),
     depth: 0,
     limit: 50,
   })

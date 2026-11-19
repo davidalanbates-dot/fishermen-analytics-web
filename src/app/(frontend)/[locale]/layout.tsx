@@ -9,6 +9,7 @@ import { isLocale, locales } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
 import { Analytics } from '@/components/Analytics'
 import { JsonLd } from '@/components/JsonLd'
+import { PreviewBar } from '@/components/PreviewBar'
 import { graph, isProductionSite, organization, website } from '@/lib/jsonld'
 import { getSiteSettings } from '@/lib/payload'
 import '../styles.css'
@@ -50,6 +51,7 @@ export default async function LocaleLayout(props: {
         <a className="skip" href="#main">
           {t(locale).skip}
         </a>
+        <PreviewBar locale={locale} />
         <SiteHeader locale={locale} />
         <main id="main">{props.children}</main>
         <SiteFooter locale={locale} />

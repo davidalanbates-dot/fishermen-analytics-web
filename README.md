@@ -52,6 +52,15 @@ Every content type has EN and BM fields. Untranslated BM fields fall back to Eng
 **Roles:** editors save drafts, publishers publish, admins also manage users and tracking settings.
 Pages, services, case studies, insights and jobs have drafts, scheduled publishing and version history.
 
+### Previewing drafts
+
+Pages, Services, Case studies, Insights and Jobs have two preview options in the editor:
+
+- **Live Preview** (eye icon): the page beside the form, updating a moment after each change (drafts autosave). Mobile, tablet and desktop sizes.
+- **Preview** (open-in-new-tab icon): the draft as a full page.
+
+Both open `/next/preview`, which only works for someone logged in to the CMS and switches on draft mode. A yellow bar marks draft mode; "Exit preview" returns to the published page. Visitors always see published content. Preview follows the language being edited (BM opens the `/ms/` page).
+
 ## Useful commands
 
 | Command                          | Does                                                              |

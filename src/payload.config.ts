@@ -6,7 +6,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
-import { buildConfig, type Field } from 'payload'
+import { buildConfig, type CollectionConfig, type Field } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
@@ -22,6 +22,7 @@ import { Services } from './collections/Services'
 import { Team } from './collections/Team'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
+import { previewCollections, previewUrl } from './lib/previewUrl'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -29,6 +30,18 @@ const dirname = path.dirname(filename)
 const siteName = 'Fishermen Analytics'
 
 /** Make the SEO plugin's title, description and image editable per language. */
+/** Adds the Preview button (opens the draft on the site) to collections that have pages. */
+const withPreview = (collection: CollectionConfig): CollectionConfig =>
+  previewCollections.includes(collection.slug)
+    ? {
+        ...collection,
+        admin: {
+          ...collection.admin,
+          preview: (doc, { locale }) => previewUrl(collection.slug, doc?.slug, locale),
+        },
+      }
+    : collection
+
 const localizeSeoFields = ({ defaultFields }: { defaultFields: Field[] }): Field[] =>
   defaultFields.map((field) =>
     'name' in field && ['title', 'description', 'image'].includes(field.name)
@@ -42,6 +55,17 @@ export default buildConfig({
     user: Users.slug,
     meta: { titleSuffix: ` | ${siteName} CMS` },
     importMap: { baseDir: path.resolve(dirname) },
+    // Side-by-side preview while editing; the page refreshes on each autosave
+    livePreview: {
+      collections: previewCollections,
+      url: ({ data, collectionConfig, locale }) =>
+        previewUrl(collectionConfig?.slug ?? '', data?.slug, locale) ?? '',
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 812 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
   localization: {
     locales: [
@@ -52,7 +76,18 @@ export default buildConfig({
     // Untranslated BM fields show the English text until the team translates them.
     fallback: true,
   },
-  collections: [Pages, Services, CaseStudies, Awards, Insights, Team, Clients, Jobs, Media, Users],
+  collections: [
+    Pages,
+    Services,
+    CaseStudies,
+    Awards,
+    Insights,
+    Team,
+    Clients,
+    Jobs,
+    Media,
+    Users,
+  ].map(withPreview),
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
