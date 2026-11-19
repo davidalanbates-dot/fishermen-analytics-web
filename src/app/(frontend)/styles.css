@@ -423,19 +423,6 @@ img {
   font-size: 14px;
   color: var(--muted);
 }
-.block-chip {
-  position: absolute;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-weight: 600;
-  font-size: 13px;
-  border: 1px solid var(--sky);
-  color: var(--sky-soft);
-}
-.block-chip.core {
-  border-color: var(--yellow);
-  color: var(--yellow);
-}
 
 /* Work cards */
 .cards {
@@ -752,11 +739,6 @@ img {
     padding: 0 16px;
   }
 }
-@media (max-width: 520px) {
-  .block-chip {
-    display: none;
-  }
-}
 
 /* Live game */
 .game-screen.live {
@@ -819,5 +801,51 @@ img {
 @media (max-width: 520px) {
   .game-catch {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Game title screen: text over the moving sea (or the still frame before the game loads) */
+.still-sea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.game-title {
+  position: absolute;
+  inset: 0;
+  padding: 34px 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.game-title .kicker {
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.game-title h3 {
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.04;
+  max-width: 15ch;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+.game-title h3 span {
+  color: var(--yellow);
+}
+.game-title .btn {
+  margin-top: 22px;
+  padding: 0 34px;
+}
+.help-touch {
+  display: none;
+}
+@media (pointer: coarse) {
+  .help-fine {
+    display: none;
+  }
+  .help-touch {
+    display: inline;
   }
 }

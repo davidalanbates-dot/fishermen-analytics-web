@@ -79,7 +79,7 @@ Marketing Excellence Awards: Search Engine Marketing · Relationship Marketing �
 ## Interactive services game (homepage)
 
 - Compact panel (~320–340 px tall) inside the services section, beside a plain list of the seven services. Homepage only.
-- Original arcade game (do not use the "Space Invaders" or "Wavy Navy" names or assets): a boat rides a rolling sea and fires pixel shots along its tilt at service blocks swimming in lanes; the sea gets rougher with each catch; each catch shows the service summary and a link; catch all seven → "Let's talk" CTA. ~30-second rounds; starts only on Play. Rolling-wave mechanic inspired by Wavy Navy (mechanic only, no copied name, art or enemies).
+- Original arcade game (do not use the "Space Invaders" or "Wavy Navy" names or assets): a boat rides a rolling sea and fires pixel shots along its tilt at service blocks swimming in lanes; the sea gets rougher with each catch; each catch shows the service summary and a link; catch all seven → "Let's talk" CTA. Title screen "Shoot the service we can help you with" over the moving sea and boat (no services shown until play). ~30-second rounds; starts only on Play. Rolling-wave mechanic inspired by Wavy Navy (mechanic only, no copied name, art or enemies).
 - Keyboard, mouse and touch; "Skip the game" link; respects reduced motion; lazy-loaded so it does not hurt page speed.
 - Block labels come from the CMS Services collection (EN/BM). Track catches, completions and click-throughs in GA4.
 - A working version is in `preview/index.html` (the `Game` module).

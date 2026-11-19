@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { track } from '@/lib/analytics'
+import { GameTitle } from './GameTitle'
 import type { GameProps, GameService } from './types'
 
 /**
@@ -53,12 +54,18 @@ type Block = {
   caught: boolean
 }
 type Shot = { x: number; y: number; vx: number; vy: number }
-type Phase = 'playing' | 'won' | 'lost'
+type Phase = 'title' | 'playing' | 'won' | 'lost'
 
-export function ServicesGame({ services, text, contactHref, listId }: GameProps) {
+export function ServicesGame({
+  services,
+  text,
+  contactHref,
+  listId,
+  autoStart = false,
+}: GameProps & { autoStart?: boolean }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [phase, setPhase] = useState<Phase>('playing')
+  const [phase, setPhase] = useState<Phase>(autoStart ? 'playing' : 'title')
   const [caught, setCaught] = useState(0)
   const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS)
   const [lastCatch, setLastCatch] = useState<GameService | null>(null)
@@ -73,15 +80,19 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
     setRound((r) => r + 1)
   }, [])
 
-  // The game loop. Re-runs for each round.
+  // The loop. Runs behind the title screen ("attract" mode: sea and boat only, no services,
+  // no timer, no input) and for each round of play.
   useEffect(() => {
-    if (phase !== 'playing') return
+    if (phase !== 'playing' && phase !== 'title') return
+    const attract = phase === 'title'
     const wrap = wrapRef.current
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (!wrap || !canvas || !ctx) return
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let visible = true // the title animation pauses while the panel is off screen
+    let attractFire = 1.2
     const fontFamily =
       getComputedStyle(document.documentElement).getPropertyValue('--font-display').trim() ||
       'sans-serif'
@@ -157,8 +168,12 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
       canvas!.height = Math.round(H * dpr)
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
       if (firstLayout) {
-        layout()
-        boat.x = W / 2
+        if (!attract) layout()
+        boat.x = attract ? W / 2 + Math.sin(1.2) * W * 0.3 : W / 2
+      }
+      if (attract && reduceMotion) {
+        updateBoat(1)
+        draw()
       }
       boat.x = Math.max(boat.w / 2 + 6, Math.min(W - boat.w / 2 - 6, boat.x))
     }
@@ -302,13 +317,22 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
     function tick(now: number) {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
-      timeLeft -= dt
+      if (!attract) timeLeft -= dt
       if (!reduceMotion) clock += dt
       if (reload > 0) reload -= dt
 
       // The sea roughens smoothly towards its target after each catch
       swell += (targetSwell - swell) * Math.min(1, dt * 1.5)
 
+      if (attract) {
+        // Behind the title: the boat cruises back and forth and fires now and then
+        boat.x = W / 2 + Math.sin(clock * 0.35 + 1.2) * W * 0.3
+        attractFire -= dt
+        if (attractFire <= 0) {
+          fire()
+          attractFire = 1.6
+        }
+      }
       if (keys.ArrowLeft) boat.x -= BOAT_SPEED * dt
       if (keys.ArrowRight) boat.x += BOAT_SPEED * dt
       boat.x = Math.max(boat.w / 2 + 6, Math.min(W - boat.w / 2 - 6, boat.x))
@@ -369,8 +393,12 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
       }
 
       draw()
-      if (caughtCount === total) return finish(true)
-      if (timeLeft <= 0) return finish(false)
+      if (!attract && caughtCount === total) return finish(true)
+      if (!attract && timeLeft <= 0) return finish(false)
+      if (attract && !visible) {
+        raf = 0 // paused off screen; the observer below resumes it
+        return
+      }
       raf = requestAnimationFrame(tick)
     }
 
@@ -402,18 +430,35 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
     updateBoat(1)
     const observer = new ResizeObserver(resize)
     observer.observe(wrap)
-    canvas.addEventListener('keydown', onKeyDown)
-    canvas.addEventListener('keyup', onKeyUp)
-    canvas.addEventListener('pointermove', onPointerMove)
-    canvas.addEventListener('pointerdown', onPointerDown)
-    canvas.focus({ preventScroll: true })
-    track('services_game_start', { round: round + 1 })
-    raf = requestAnimationFrame(tick)
+
+    // Title screen: animate only while the panel is on screen (with reduced motion it
+    // stays a still picture, drawn by resize()).
+    const onScreen = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible && !raf && !ended && !reduceMotion) {
+        last = performance.now()
+        raf = requestAnimationFrame(tick)
+      }
+    })
+
+    if (attract) {
+      onScreen.observe(wrap)
+      if (!reduceMotion) raf = requestAnimationFrame(tick)
+    } else {
+      canvas.addEventListener('keydown', onKeyDown)
+      canvas.addEventListener('keyup', onKeyUp)
+      canvas.addEventListener('pointermove', onPointerMove)
+      canvas.addEventListener('pointerdown', onPointerDown)
+      canvas.focus({ preventScroll: true })
+      track('services_game_start', { round: round + 1 })
+      raf = requestAnimationFrame(tick)
+    }
 
     return () => {
       ended = true
       cancelAnimationFrame(raf)
       observer.disconnect()
+      onScreen.disconnect()
       canvas.removeEventListener('keydown', onKeyDown)
       canvas.removeEventListener('keyup', onKeyUp)
       canvas.removeEventListener('pointermove', onPointerMove)
@@ -424,18 +469,26 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
   return (
     <div className="game-live">
       <div className="game-screen live" ref={wrapRef}>
-        <canvas ref={canvasRef} tabIndex={0} aria-label={text.canvasLabel} />
-        <div className="game-hud" aria-hidden="true">
-          <span>
-            {text.caught} {caught} / {total}
-          </span>
-          <span>
-            {secondsLeft}
-            {text.seconds}
-          </span>
-        </div>
+        {phase === 'title' ? (
+          <canvas ref={canvasRef} aria-hidden="true" />
+        ) : (
+          <canvas ref={canvasRef} tabIndex={0} aria-label={text.canvasLabel} />
+        )}
+        {phase === 'title' ? (
+          <GameTitle text={text} onPlay={restart} />
+        ) : (
+          <div className="game-hud" aria-hidden="true">
+            <span>
+              {text.caught} {caught} / {total}
+            </span>
+            <span>
+              {secondsLeft}
+              {text.seconds}
+            </span>
+          </div>
+        )}
 
-        {phase !== 'playing' ? (
+        {phase === 'won' || phase === 'lost' ? (
           <div className="game-overlay">
             <div>
               <p className="display">
@@ -471,20 +524,22 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
       </div>
 
       {/* Catch info sits below the screen so it never hides the boat. Space is reserved. */}
-      <div className="game-catch" role="status" aria-live="polite">
-        {lastCatch && phase === 'playing' ? (
-          <>
-            <strong>{lastCatch.title}</strong>
-            <span>{lastCatch.summary}</span>
-            <Link
-              href={lastCatch.href}
-              onClick={() => track('services_game_service_click', { service: lastCatch.title })}
-            >
-              {text.more} →
-            </Link>
-          </>
-        ) : null}
-      </div>
+      {phase !== 'title' ? (
+        <div className="game-catch" role="status" aria-live="polite">
+          {lastCatch && phase === 'playing' ? (
+            <>
+              <strong>{lastCatch.title}</strong>
+              <span>{lastCatch.summary}</span>
+              <Link
+                href={lastCatch.href}
+                onClick={() => track('services_game_service_click', { service: lastCatch.title })}
+              >
+                {text.more} →
+              </Link>
+            </>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   )
 }
