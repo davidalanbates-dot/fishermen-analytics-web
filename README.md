@@ -57,6 +57,7 @@ Pages, services, case studies, insights and jobs have drafts, scheduled publishi
 | -------------------------------- | ------------------------------------------------------------- |
 | `npm run dev:local`              | Start the local database, then the site and CMS               |
 | `npm run db`                     | Start only the local database                                 |
+| `npm run seed`                   | Load the agreed content into the CMS (safe to rerun)          |
 | `npm run dev`                    | Start the site and CMS against `DATABASE_URL`                 |
 | `npm run generate:types`         | Regenerate `src/payload-types.ts` after changing collections  |
 | `npm run generate:importmap`     | Regenerate the admin import map after adding admin components |
