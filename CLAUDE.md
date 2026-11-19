@@ -126,3 +126,4 @@ The site is the agency's own SEO/GEO showcase: Core Web Vitals pass on mobile; s
 - Email address, phone number, reply time for the enquiry form; confirm office address.
 - Team photos and bios.
 - Whether fishermen.co will link to fishermen-analytics.com.
+- Mobile Core Web Vitals check: run PageSpeed Insights on the live domain after launch (not run locally).
