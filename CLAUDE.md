@@ -35,8 +35,8 @@ This brief carries over decisions made while planning in Claude chat. Treat them
 ## Positioning
 
 - "The data-led Fishermen": marketing and actionable insights from data and user behaviour.
-- **Lead services:** Data Analytics, SEO/GEO Optimisation (marked "Our core").
-- **Other services:** Creative Production, Video Production, Website Development, Social Media Management, Media Management, each framed as data-driven.
+- **Two layers, not "core" services (agreed 19 Nov 2026):** Data Analytics and SEO/GEO run through everything we make. Every project is shaped by data (the data layer) and built to be found on Google and in AI answers (the search layer). Both are also sold on their own. Do not label them "Our core" or present them as standalone specialisms only.
+- **What we make (the five crafts):** Creative Production, Video Production, Website Development, Social Media Management, Media Management. Each states its data layer and search layer in one concrete line each (CMS fields on Services). Homepage shows this as a matrix: crafts down the side, the two layers across the top. Keep SEO/GEO prominent in page titles and metadata so the specialist signal is not lost.
 - Family line: "Part of the Fishermen family, alongside Fishermen Integrated." Integrated brings the big ideas; Analytics brings the insight, search visibility and measurable results.
 - Never claim Integrated-only awards. Joint credit is labelled "with Fishermen Integrated".
 - Method (from the credentials deck): Find the fish (insight) → Craft the hook (creative) → Reel in the results (analytics and optimisation).

@@ -90,13 +90,25 @@ async function upsertMedia(payload: Payload, file: string, alt: string): Promise
 
 // ---------- Content ----------
 
-const SERVICES = [
+type SeedService = {
+  slug: string
+  title: string
+  gameLabel: string
+  gameIcon: string
+  role?: 'craft' | 'data' | 'search'
+  summary: string
+  items: string[]
+  dataLayer?: string
+  searchLayer?: string
+}
+
+const SERVICES: SeedService[] = [
   {
     slug: 'data-analytics',
     gameIcon: 'analytics',
     title: 'Data Analytics',
     gameLabel: 'Data Analytics',
-    core: true,
+    role: 'data',
     summary:
       'Tracking, dashboards and audience insight that show what is really driving your growth, and what to do next.',
     items: [
@@ -111,7 +123,7 @@ const SERVICES = [
     gameIcon: 'seo',
     title: 'SEO / GEO Optimisation',
     gameLabel: 'SEO/GEO',
-    core: true,
+    role: 'search',
     summary:
       'Visibility on Google and in AI answers from Google AI Overviews, ChatGPT, Gemini and Perplexity.',
     items: [
@@ -124,6 +136,8 @@ const SERVICES = [
   {
     slug: 'creative-production',
     gameIcon: 'creative',
+    dataLayer: 'Audience insight from GWI and social listening shapes the idea.',
+    searchLayer: 'Copy and assets written to rank and to be quoted in AI answers.',
     title: 'Creative Production',
     gameLabel: 'Creative',
     summary: 'Campaign ideas, design and copy built on what the data says about your audience.',
@@ -137,6 +151,8 @@ const SERVICES = [
   {
     slug: 'video-production',
     gameIcon: 'video',
+    dataLayer: 'Viewing data picks the story, length and platform.',
+    searchLayer: 'Transcripts, chapters and schema so Google and AI can find it.',
     title: 'Video Production',
     gameLabel: 'Video',
     summary:
@@ -151,6 +167,8 @@ const SERVICES = [
   {
     slug: 'website-development',
     gameIcon: 'web',
+    dataLayer: 'GA4 and conversion tracking built in from day one.',
+    searchLayer: 'Fast and crawlable: Core Web Vitals, schema and llms.txt.',
     title: 'Website Development',
     gameLabel: 'Web Dev',
     summary: 'Fast, measurable websites and CMS builds, ready for search and AI from day one.',
@@ -164,6 +182,8 @@ const SERVICES = [
   {
     slug: 'social-media-management',
     gameIcon: 'social',
+    dataLayer: 'Weekly reporting moves effort to the posts that perform.',
+    searchLayer: 'Content planned around what people actually search for.',
     title: 'Social Media Management',
     gameLabel: 'Social Media',
     summary: 'Always-on content, community management and reporting across your social channels.',
@@ -177,6 +197,8 @@ const SERVICES = [
   {
     slug: 'media-management',
     gameIcon: 'media',
+    dataLayer: 'Budgets shift to what converts, tracked end to end.',
+    searchLayer: 'Paid and organic search planned together, not in silos.',
     title: 'Media Management',
     gameLabel: 'Media',
     summary:
@@ -521,7 +543,9 @@ for (const [i, s] of SERVICES.entries()) {
       summary: s.summary,
       items: s.items.map((item) => ({ item })),
       slug: s.slug,
-      core: Boolean(s.core),
+      role: s.role ?? 'craft',
+      dataLayer: s.dataLayer ?? null,
+      searchLayer: s.searchLayer ?? null,
       order: i + 1,
       _status: 'published',
     },
@@ -684,9 +708,9 @@ const PAGES = [
       },
       {
         blockType: 'services',
-        heading: 'Seven services. One data-led team.',
+        heading: 'Everything we make starts with data and is built to be found.',
         intro:
-          'Data Analytics and SEO/GEO are our core. Everything else we make is shaped by what the numbers say.',
+          'Five things we make. Two layers that run through all of them. Data Analytics and SEO/GEO are also available on their own.',
         showGame: true,
       },
       { blockType: 'featuredWork', heading: 'The numbers behind the work.' },

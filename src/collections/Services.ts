@@ -6,7 +6,7 @@ export const Services: CollectionConfig = {
   slug: 'services',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'core', 'order', '_status'],
+    defaultColumns: ['title', 'role', 'order', '_status'],
     group: 'Content',
   },
   defaultSort: 'order',
@@ -39,6 +39,38 @@ export const Services: CollectionConfig = {
     },
     { name: 'summary', type: 'textarea', required: true, localized: true, maxLength: 220 },
     {
+      type: 'row',
+      admin: {
+        condition: (_, siblingData) => (siblingData?.role ?? 'craft') === 'craft',
+      },
+      fields: [
+        {
+          name: 'dataLayer',
+          label: 'The data layer',
+          type: 'textarea',
+          localized: true,
+          maxLength: 120,
+          admin: {
+            width: '50%',
+            description:
+              'One concrete line: how data shapes this craft. Shown in the services matrix.',
+          },
+        },
+        {
+          name: 'searchLayer',
+          label: 'The search layer',
+          type: 'textarea',
+          localized: true,
+          maxLength: 120,
+          admin: {
+            width: '50%',
+            description:
+              'One concrete line: how this craft is built to be found on Google and in AI answers.',
+          },
+        },
+      ],
+    },
+    {
       name: 'items',
       label: 'What is included',
       type: 'array',
@@ -59,11 +91,20 @@ export const Services: CollectionConfig = {
     },
     slugField(),
     {
-      name: 'core',
-      type: 'checkbox',
-      label: 'Core service ("Our core")',
-      defaultValue: false,
-      admin: { position: 'sidebar' },
+      name: 'role',
+      type: 'select',
+      required: true,
+      defaultValue: 'craft',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Data Analytics and SEO/GEO are layers that run through everything we make; the rest are crafts.',
+      },
+      options: [
+        { label: 'What we make (craft)', value: 'craft' },
+        { label: 'The data layer', value: 'data' },
+        { label: 'The search layer', value: 'search' },
+      ],
     },
     { name: 'order', type: 'number', defaultValue: 10, admin: { position: 'sidebar' } },
   ],

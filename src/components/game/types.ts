@@ -7,7 +7,6 @@ export type GameService = {
   title: string
   summary: string
   href: string
-  core: boolean
   icon: PixelIcon
 }
 

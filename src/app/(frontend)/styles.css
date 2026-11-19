@@ -326,59 +326,9 @@ img {
   font-weight: 600;
 }
 
-/* Services */
-.svc-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-}
-.svc-cards {
-  flex: 1 1 420px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px;
-  align-content: start;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.svc-card {
-  display: block;
-  height: 100%;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px 16px;
-  text-decoration: none;
-  background: var(--surface-2);
-}
-.svc-card strong {
-  font-family: var(--font-display), sans-serif;
-}
-.svc-card.core {
-  border-color: var(--yellow);
-  padding: 16px 18px;
-}
-.svc-core {
-  grid-column: 1 / -1;
-}
-.svc-card .tag {
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--yellow);
-}
-.svc-card.core strong {
-  font-size: 20px;
-}
-.svc-card .sum {
-  display: block;
-  font-size: 14px;
-  color: var(--text-2);
-}
-
 /* Game panel (sonar screen) */
 .game {
-  flex: 1 1 440px;
+  flex: 0 1 520px;
   min-width: 0;
 }
 .game-screen {
@@ -847,5 +797,221 @@ img {
   }
   .help-touch {
     display: inline;
+  }
+}
+
+/* What we do: heading beside the game, then the layers matrix */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.svc-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px 48px;
+  margin-bottom: 40px;
+}
+.svc-head {
+  flex: 1 1 440px;
+  min-width: 0;
+}
+.svc-head .h2 {
+  max-width: 17ch;
+}
+.svc-intro {
+  margin-top: 18px;
+  max-width: 56ch;
+  font-size: 17px;
+  color: var(--text-2);
+}
+
+/* The matrix: crafts down the side, the two layers across the top */
+.layers {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  table-layout: fixed;
+}
+.layers th,
+.layers td {
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+}
+.layers tbody tr:last-child th,
+.layers tbody tr:last-child td {
+  border-bottom: 0;
+}
+.layers thead th {
+  background: var(--surface);
+  padding: 18px 22px;
+  font-weight: 400;
+}
+.layers .layers-make {
+  width: 280px;
+  font-family: var(--font-display), sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.layers-head {
+  border-left: 1px solid var(--line);
+}
+.layers-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex: 0 0 12px;
+}
+.layers .data .swatch {
+  background: var(--yellow);
+}
+.layers .search .swatch {
+  background: var(--sky);
+}
+.layers-service {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.layers-own {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.layers .data .layers-own {
+  color: var(--yellow);
+}
+.layers .search .layers-own {
+  color: var(--sky);
+}
+.layers-own:hover {
+  text-decoration: underline;
+}
+.layers tbody th,
+.layers tbody td {
+  background: var(--surface-2);
+}
+.layers tbody th {
+  padding: 0;
+  font-weight: 400;
+}
+.layers-craft {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 20px 22px;
+  min-height: 44px;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  text-decoration: none;
+}
+.layers-craft span:last-child {
+  color: var(--muted);
+}
+.layers-craft:hover span:last-child {
+  color: var(--sky);
+}
+.layers tbody td {
+  padding: 20px 22px;
+  border-left: 1px solid var(--line);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+/* Phones and narrow tablets: each craft becomes a card with its two layer lines stacked */
+@media (max-width: 860px) {
+  .layers,
+  .layers tbody,
+  .layers thead,
+  .layers tr,
+  .layers th,
+  .layers td {
+    display: block;
+    width: 100%;
+  }
+  .layers {
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+  .layers thead tr {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .layers thead th {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .layers .layers-make {
+    display: none;
+  }
+  .layers-name {
+    font-size: 20px;
+  }
+  .layers tbody tr {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .layers tbody th,
+  .layers tbody td {
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .layers tbody tr td:last-child {
+    border-bottom: 0;
+  }
+  .layers tbody td {
+    padding: 12px 18px 14px;
+  }
+  .layers tbody td::before {
+    content: attr(data-label);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-family: var(--font-display), sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .layers tbody td.data::before {
+    color: var(--yellow);
+  }
+  .layers tbody td.search::before {
+    color: var(--sky);
+  }
+  .layers-craft {
+    padding: 16px 18px;
   }
 }

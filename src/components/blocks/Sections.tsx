@@ -57,14 +57,28 @@ export async function FamilyBlock({ block, locale }: BlockProps<'family'>) {
   )
 }
 
+/**
+ * What we do, as a matrix: the five crafts down the side, and the two layers that run
+ * through all of them (Data Analytics, SEO/GEO) across the top. On phones each craft
+ * becomes a card with its two layer lines stacked.
+ */
 export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
   const d = t(locale)
   const services = await getServices(locale)
+  const crafts = services.filter((s) => (s.role ?? 'craft') === 'craft')
+  const dataLayer = services.find((s) => s.role === 'data')
+  const searchLayer = services.find((s) => s.role === 'search')
+  const href = (slug?: string | null) => localePath(locale, `/services/${slug ?? ''}`)
+
   return (
     <section className="section">
       <div className="wrap">
-        <SectionHead kicker={d.kickers.services} heading={block.heading} intro={block.intro} />
-        <div className="svc-grid">
+        <div className="svc-top">
+          <div className="svc-head">
+            <p className="kicker">{d.kickers.services}</p>
+            {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
+            {block.intro ? <p className="svc-intro">{block.intro}</p> : null}
+          </div>
           {block.showGame ? (
             <GameLoader
               listId="services-list"
@@ -75,28 +89,69 @@ export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
                 label: s.gameLabel || s.title,
                 title: s.title,
                 summary: s.summary,
-                href: localePath(locale, `/services/${s.slug}`),
-                core: Boolean(s.core),
+                href: href(s.slug),
                 icon: isPixelIcon(s.gameIcon) ? s.gameIcon : 'analytics',
               }))}
             />
           ) : null}
-          <ul className="svc-cards" id="services-list">
-            {services.map((s) => (
-              <li key={s.id} className={s.core ? 'svc-core' : undefined}>
-                <Link
-                  href={localePath(locale, `/services/${s.slug}`)}
-                  className={`svc-card${s.core ? ' core' : ''}`}
-                >
-                  {s.core ? <span className="tag">{d.core}</span> : null}
-                  {s.core ? <br /> : null}
-                  <strong>{s.title}</strong>
-                  {s.core ? <span className="sum">{s.summary}</span> : null}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
+
+        <table className="layers" id="services-list">
+          <caption className="sr-only">{d.layers.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col" className="layers-make">
+                {d.layers.whatWeMake}
+              </th>
+              <th scope="col" className="layers-head data">
+                <span className="layers-name">
+                  <span className="swatch" aria-hidden="true" />
+                  {d.layers.data}
+                </span>
+                {dataLayer ? (
+                  <>
+                    <span className="layers-service">{dataLayer.title}</span>
+                    <Link href={href(dataLayer.slug)} className="layers-own">
+                      {d.layers.onItsOwn}
+                    </Link>
+                  </>
+                ) : null}
+              </th>
+              <th scope="col" className="layers-head search">
+                <span className="layers-name">
+                  <span className="swatch" aria-hidden="true" />
+                  {d.layers.search}
+                </span>
+                {searchLayer ? (
+                  <>
+                    <span className="layers-service">{searchLayer.title}</span>
+                    <Link href={href(searchLayer.slug)} className="layers-own">
+                      {d.layers.onItsOwn}
+                    </Link>
+                  </>
+                ) : null}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {crafts.map((s) => (
+              <tr key={s.id}>
+                <th scope="row">
+                  <Link href={href(s.slug)} className="layers-craft">
+                    <span>{s.title}</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </th>
+                <td className="data" data-label={d.layers.data}>
+                  {s.dataLayer}
+                </td>
+                <td className="search" data-label={d.layers.search}>
+                  {s.searchLayer}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   )

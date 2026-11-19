@@ -29,7 +29,13 @@ export const dictionary = {
       clients: 'Clients',
       contact: 'Get in touch',
     },
-    core: 'Our core',
+    layers: {
+      caption: 'What we make, and the two layers that run through all of it',
+      whatWeMake: 'What we make',
+      data: 'The data layer',
+      search: 'The search layer',
+      onItsOwn: 'Also on its own →',
+    },
     allCaseStudies: 'All case studies',
     allAwards: 'All awards',
     clientsIntro:
@@ -102,7 +108,13 @@ export const dictionary = {
       clients: 'Pelanggan',
       contact: 'Hubungi kami',
     },
-    core: 'Teras kami',
+    layers: {
+      caption: 'Apa yang kami hasilkan, dan dua lapisan yang merentasi semuanya',
+      whatWeMake: 'Apa yang kami hasilkan',
+      data: 'Lapisan data',
+      search: 'Lapisan carian',
+      onItsOwn: 'Juga ditawarkan secara berasingan →',
+    },
     allCaseStudies: 'Semua kajian kes',
     allAwards: 'Semua anugerah',
     clientsIntro:

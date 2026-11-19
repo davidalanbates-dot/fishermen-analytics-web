@@ -274,14 +274,14 @@ export function ServicesGame({
       // Buoys riding the far swell, each leaning with the wave under it
       for (const b of buoys) {
         if (!b.active || b.caught) continue
-        const body = b.s.core ? COLORS.yellow : COLORS.sky
-        const shade = b.s.core ? '#b8ad00' : '#00719f'
+        const body = COLORS.sky // all seven match: no service is singled out as "core"
+        const shade = '#00719f'
         c.save()
         c.translate(b.x, b.y)
         c.rotate(b.tilt)
         c.fillStyle = COLORS.line
         c.fillRect(-2, -52, 4, 18) // mast
-        c.fillStyle = b.s.core ? COLORS.line : COLORS.yellow
+        c.fillStyle = COLORS.yellow
         c.fillRect(-5, -56, 10, 6) // lamp
         roundRect(-21, -36, 42, 40, 6) // body
         c.fillStyle = body
@@ -297,25 +297,28 @@ export function ServicesGame({
         c.restore()
       }
 
-      // The far sea, in front of the buoys so they sit in the water
-      c.fillStyle = COLORS.farSea
-      c.beginPath()
-      c.moveTo(0, H)
-      for (let x = 0; x <= W; x += 6) c.lineTo(x, farY(x))
-      c.lineTo(W, H)
-      c.closePath()
-      c.globalAlpha = 0.94
-      c.fill()
-      c.globalAlpha = 1
-      c.strokeStyle = COLORS.farCrest
-      c.lineWidth = 1.5
-      c.beginPath()
-      for (let x = 0; x <= W; x += 6) {
-        const y = farY(x)
-        if (x === 0) c.moveTo(x, y)
-        else c.lineTo(x, y)
+      // The far sea, in front of the buoys so they sit in the water.
+      // Not shown behind the title screen, which keeps just the near sea and the boat.
+      if (!attract) {
+        c.fillStyle = COLORS.farSea
+        c.beginPath()
+        c.moveTo(0, H)
+        for (let x = 0; x <= W; x += 6) c.lineTo(x, farY(x))
+        c.lineTo(W, H)
+        c.closePath()
+        c.globalAlpha = 0.94
+        c.fill()
+        c.globalAlpha = 1
+        c.strokeStyle = COLORS.farCrest
+        c.lineWidth = 1.5
+        c.beginPath()
+        for (let x = 0; x <= W; x += 6) {
+          const y = farY(x)
+          if (x === 0) c.moveTo(x, y)
+          else c.lineTo(x, y)
+        }
+        c.stroke()
       }
-      c.stroke()
 
       // Name tags above the buoys, kept level so they stay readable
       c.font = `700 ${W < 440 ? 10.5 : 11}px ${fontFamily}`
@@ -517,7 +520,7 @@ export function ServicesGame({
         hit.caught = true
         caughtCount += 1
         catchTimer = 3.5
-        burst(hit.x, hit.y - 16, hit.s.core ? COLORS.yellow : COLORS.sky)
+        burst(hit.x, hit.y - 16, COLORS.sky)
         bringInNext()
         if (!reduceMotion) {
           targetSwell = Math.min(SWELL_MAX, SWELL_START + caughtCount * SWELL_PER_CATCH)
