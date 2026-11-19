@@ -67,6 +67,21 @@ Pages, services, case studies, insights and jobs have drafts, scheduled publishi
 | `npm run ci`                     | Apply migrations, then build (Vercel build command)               |
 | `npm run lint`                   | Lint                                                              |
 
+## SEO / GEO
+
+- **Meta per page:** every page, service, case study, article and job has an SEO tab in the CMS
+  (title, description, image) in English and BM. Empty fields fall back to the content itself.
+- **Structured data** (schema.org JSON-LD): Organization and WebSite on every page, plus Service,
+  CreativeWork (case studies), Article, FAQPage, Person (team) and breadcrumbs. Company facts come
+  from Site settings, so keep those identical to fishermen.co, LinkedIn and directory listings.
+- **`/sitemap.xml`**, **`/robots.txt`** and **`/llms.txt`** are generated from the CMS (hourly).
+  robots.txt welcomes AI crawlers by name. Outside production (previews, staging, local) it blocks
+  everything and pages carry `noindex`, so only the live domain is indexed.
+- **hreflang:** every page links its English and BM versions (`en-MY`, `ms-MY`, `x-default`).
+- **GA4 and Search Console:** paste the GA4 measurement ID and the Search Console verification code
+  into Site settings › Tracking. GA4 loads only on the live site, after the page is interactive.
+- Production needs `NEXT_PUBLIC_SERVER_URL=https://fishermen-analytics.com` (see `.env.example`).
+
 ## Accounts
 
 The code lives in a private repo on David's personal GitHub (davidalanbates-dot).

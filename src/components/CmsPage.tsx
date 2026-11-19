@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 
 import { RenderBlocks } from '@/components/blocks/RenderBlocks'
+import { JsonLd } from '@/components/JsonLd'
+import { t } from '@/i18n/dictionary'
+import { breadcrumbs, faqPage, graph } from '@/lib/jsonld'
 import type { Locale } from '@/i18n/config'
 import { getPage, mediaUrl } from '@/lib/payload'
 import { pageMetadata } from '@/lib/seo'
@@ -36,11 +39,24 @@ export async function CmsPage(props: {
   locale: Locale
   after?: ReactNode
   before?: ReactNode
+  /** Extra structured data for this page (e.g. team members on About). */
+  schema?: Record<string, unknown>[]
 }) {
   const page = await getPage(props.slug, props.locale)
   if (!page) notFound()
   const blocks = page.layout ?? []
   const [first, ...rest] = blocks
+  const d = t(props.locale)
+  // Any FAQ blocks on the page become FAQPage structured data
+  const faqs = blocks.flatMap((b) => (b.blockType === 'faq' ? (b.items ?? []) : []))
+  const schema = graph(
+    breadcrumbs(props.locale, [
+      { name: d.nav.home, path: '/' },
+      { name: page.title, path: `/${page.slug}` },
+    ]),
+    faqPage(faqs),
+    ...(props.schema ?? []),
+  )
   // Page-specific sections go after the page's hero, before its other blocks
   return (
     <>
@@ -48,6 +64,7 @@ export async function CmsPage(props: {
       {props.before}
       <RenderBlocks blocks={rest} locale={props.locale} />
       {props.after}
+      <JsonLd data={schema} />
     </>
   )
 }

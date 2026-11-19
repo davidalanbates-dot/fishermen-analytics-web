@@ -849,7 +849,7 @@ await payload.updateGlobal({
     foundingYear: 2014,
     tagline: 'Marketing that starts with the data.',
     description:
-      'Fishermen Analytics is an independent digital marketing agency in Malaysia, founded in 2014. The data-led member of the Fishermen family, it specialises in data analytics and SEO/GEO, with creative, video, web, social and media services shaped by data. Sister agency: Fishermen Integrated.',
+      'Fishermen Analytics is an independent digital marketing agency in Malaysia, founded in 2014, and the data-led member of the Fishermen family. Everything it makes, from creative, video and websites to social and paid media, is shaped by data analytics and built to be found on Google and in AI answers (SEO/GEO). Its sister agency is Fishermen Integrated.',
     logo: siteLogo,
     fishermenIntegratedUrl: 'https://www.fishermen.co',
   },

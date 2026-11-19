@@ -2,10 +2,12 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { JsonLd } from '@/components/JsonLd'
 import { CtaBand, PageHead } from '@/components/PageParts'
 import { localePath, locales, type Locale } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
 import { getCaseStudies, getCaseStudy, hasCaseStudyPage, mediaUrl, populated } from '@/lib/payload'
+import { breadcrumbs, caseStudy as caseStudyLd, graph } from '@/lib/jsonld'
 import { pageMetadata, richTextToPlain } from '@/lib/seo'
 
 export const revalidate = 60
@@ -132,6 +134,16 @@ export default async function CaseStudyPage({ params }: Props) {
       ) : null}
 
       <CtaBand locale={locale} />
+      <JsonLd
+        data={graph(
+          caseStudyLd(c, locale),
+          breadcrumbs(locale, [
+            { name: d.nav.home, path: '/' },
+            { name: d.nav.work, path: '/work' },
+            { name: c.title, path: `/work/${c.slug}` },
+          ]),
+        )}
+      />
     </>
   )
 }

@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { WorkCard } from '@/components/blocks/Sections'
+import { JsonLd } from '@/components/JsonLd'
 import { CtaBand, PageHead } from '@/components/PageParts'
 import { localePath, locales, type Locale } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
 import { getCaseStudies, getService, getServices } from '@/lib/payload'
+import { breadcrumbs, faqPage, graph, service as serviceLd } from '@/lib/jsonld'
 import { pageMetadata } from '@/lib/seo'
 import type { Service } from '@/payload-types'
 
@@ -142,6 +144,17 @@ export default async function ServicePage({ params }: Props) {
       ) : null}
 
       <CtaBand locale={locale} />
+      <JsonLd
+        data={graph(
+          serviceLd(service, locale),
+          breadcrumbs(locale, [
+            { name: d.nav.home, path: '/' },
+            { name: d.nav.services, path: '/services' },
+            { name: service.title, path: `/services/${service.slug}` },
+          ]),
+          faqPage(service.faqs),
+        )}
+      />
     </>
   )
 }

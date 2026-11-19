@@ -1,10 +1,12 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { notFound } from 'next/navigation'
 
+import { JsonLd } from '@/components/JsonLd'
 import { CtaBand, PageHead } from '@/components/PageParts'
 import { localePath, locales, type Locale } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
 import { getInsight, getInsights, mediaUrl, populated } from '@/lib/payload'
+import { article, breadcrumbs, faqPage, graph } from '@/lib/jsonld'
 import { pageMetadata, richTextToPlain } from '@/lib/seo'
 import { formatDate } from '@/lib/format'
 
@@ -78,6 +80,17 @@ export default async function InsightPage({ params }: Props) {
       ) : null}
 
       <CtaBand locale={locale} />
+      <JsonLd
+        data={graph(
+          article(a, locale),
+          breadcrumbs(locale, [
+            { name: d.nav.home, path: '/' },
+            { name: d.nav.insights, path: '/insights' },
+            { name: a.title, path: `/insights/${a.slug}` },
+          ]),
+          faqPage(a.faqs),
+        )}
+      />
     </>
   )
 }

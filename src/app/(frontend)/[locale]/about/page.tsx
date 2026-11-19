@@ -5,6 +5,7 @@ import { CmsPage, cmsPageMetadata } from '@/components/CmsPage'
 import { CtaBand } from '@/components/PageParts'
 import type { Locale } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
+import { person } from '@/lib/jsonld'
 import { getTeam, mediaUrl } from '@/lib/payload'
 
 export const revalidate = 60
@@ -33,6 +34,7 @@ export default async function AboutPage({ params }: Props) {
   return (
     <CmsPage
       slug="about"
+      schema={team.map((p) => person(p, locale))}
       locale={locale}
       after={
         <>
