@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fishermen Analytics Website Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  /* Brand world from the logo: yellow band for the hero and header only; white pages; black type; sky blue for data. */
+  --yellow:#FFF200;
+  --ink:#111111;
+  --blue:#00A2E8;
+  --blue-ink:#00689A;
+  --paper:#FFFFFF;
+  --mist:#F5F5EF;
+  --line:#DCDCD3;
+  --muted:#4A4A44;
+  --display:"Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
+  --body:"Work Sans", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+img{max-width:100%;display:block}
+a{color:var(--blue-ink)}
+a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-0.01em}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.preview-bar{background:var(--ink);color:#fff;font-size:13px;padding:8px 0}
+.preview-bar .wrap{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between}
+.preview-bar b{color:var(--yellow);font-weight:600}
+
+/* Header */
+header.site{background:var(--yellow);border-bottom:2px solid var(--ink)}
+header.site .wrap{padding-top:10px;padding-bottom:10px}
+nav.main{width:100%}
+.nav-end{margin-left:auto;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.brand-zone{grid-column:1 / -1;height:220px;border:2px dashed rgba(17,17,17,.45);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(17,17,17,.6);margin-bottom:8px}
+.hero.home-hero{padding-top:32px}
+.wordmark{display:inline-flex;flex-direction:column;align-items:stretch;text-decoration:none;color:var(--ink);padding-top:10px}
+.wm-word{font-family:var(--display);font-weight:700;font-size:44px;line-height:.9;letter-spacing:-0.025em}
+.wm-i{position:relative;display:inline-block}
+.wm-i svg{position:absolute;left:50%;top:-.36em;width:.36em;height:.48em;transform:translateX(-46%);fill:none;stroke:var(--blue);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;overflow:visible;transform-origin:50% 0}
+.wordmark:hover .wm-i svg{animation:bob .9s ease-in-out}
+@keyframes bob{0%,100%{transform:translateX(-46%) rotate(0)}30%{transform:translateX(-46%) rotate(-14deg)}65%{transform:translateX(-46%) rotate(9deg)}}
+@media (prefers-reduced-motion: reduce){.wordmark:hover .wm-i svg{animation:none}}
+.wm-sub{background:var(--blue);color:#fff;font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.32em;text-transform:uppercase;text-align:right;padding:3px 4px 3px 8px;margin-top:5px}
+nav.main{display:flex;flex-wrap:wrap;align-items:center;gap:6px 22px;font-weight:500;font-size:16px}
+nav.main a{color:var(--ink);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+nav.main a[aria-current="page"],nav.main a:hover{border-bottom-color:var(--ink)}
+nav.main a.btn{color:var(--yellow);border-bottom-color:var(--ink);padding:9px 18px;min-height:42px;font-size:15px}
+nav.main a.btn:hover{color:#fff}
+.lang{display:inline-flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden;font-size:13px;font-weight:600}
+.lang button{font:inherit;border:0;background:transparent;padding:6px 10px;cursor:pointer;color:var(--ink);min-height:36px}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--yellow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 22px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:16px;text-decoration:none;border:2px solid var(--ink);cursor:pointer;background:var(--ink);color:var(--yellow)}
+.btn:hover{background:#000;color:#fff}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--yellow)}
+.btn.blue{background:var(--blue);border-color:var(--blue);color:var(--ink)}
+
+/* Hero */
+.hero{background:var(--yellow);padding:56px 0 64px;border-bottom:2px solid var(--ink)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:48px;align-items:end}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.hero h1{font-size:clamp(44px,6.4vw,84px);margin:16px 0 20px}
+.hero h1 .bar{display:inline-block;background:var(--blue);color:#fff;padding:0 .18em;margin-top:.08em}
+.hero .lede{font-size:20px;max-width:34ch}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.proof{display:grid;gap:12px}
+.proof a{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;background:var(--paper);border:2px solid var(--ink);padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:5px 5px 0 var(--ink);transition:transform .15s}
+.proof a:hover{transform:translate(-2px,-2px)}
+.proof .num{font-family:var(--display);font-size:40px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;grid-row:span 2}
+.proof .what{font-weight:600}
+.proof .who{font-size:14px;color:var(--muted)}
+
+/* Family strip */
+.family{background:var(--ink);color:#fff}
+.family .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:20px}
+.family p{max-width:70ch}
+.family strong{color:var(--yellow)}
+.family a{color:#fff;font-weight:600}
+
+/* Sections */
+section.block{padding:80px 0}
+section.block.mist{background:var(--mist)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px 32px;margin-bottom:36px}
+.sec-head h2{font-size:clamp(34px,4.2vw,52px);max-width:18ch}
+.sec-head p{max-width:46ch;color:var(--muted)}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-ink);margin-bottom:12px}
+
+/* Services + game */
+.svc-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:32px;align-items:start}
+.game{position:relative;background:var(--ink);border:2px solid var(--ink);border-radius:6px;overflow:hidden;height:340px;color:#fff}
+.game canvas{display:block;width:100%;height:100%;touch-action:none}
+.game .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(17,17,17,.88)}
+.game .overlay[hidden]{display:none}
+.game .overlay h3{font-size:30px;color:var(--yellow)}
+.game .overlay p{max-width:38ch;color:#ddd;font-size:15px}
+.game .hud{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;pointer-events:none;font-variant-numeric:tabular-nums;color:#fff}
+.game .catch{position:absolute;right:12px;bottom:12px;max-width:260px;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:12px 14px;font-size:14px;box-shadow:4px 4px 0 var(--blue)}
+.game .catch[hidden]{display:none}
+.game .catch b{font-family:var(--display);font-size:19px;display:block;margin-bottom:4px}
+.game .catch a{color:var(--ink);font-weight:600}
+.game-help{font-size:13px;color:var(--muted);margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
+.svc-list{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.svc-list li{border-bottom:1px solid var(--line)}
+.svc-list a{display:grid;grid-template-columns:2.2em 1fr auto;gap:12px;align-items:baseline;padding:14px 4px;text-decoration:none;color:var(--ink)}
+.svc-list a:hover{background:var(--mist)}
+.svc-list .n{font-family:var(--display);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.svc-list .name{font-weight:600;font-size:18px}
+.svc-list .name small{display:block;font-weight:400;font-size:14px;color:var(--muted);margin-top:2px}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:var(--blue);color:var(--ink);white-space:nowrap}
+.tag.y{background:var(--yellow);border:1px solid var(--ink)}
+.tag.o{background:transparent;border:1px solid var(--muted);color:var(--muted)}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{display:flex;flex-direction:column;gap:12px;background:var(--paper);border:2px solid var(--ink);padding:22px;text-decoration:none;color:var(--ink);min-height:100%}
+a.card:hover{box-shadow:6px 6px 0 var(--blue);transform:translate(-2px,-2px)}
+a.card{transition:transform .15s, box-shadow .15s}
+.card .client{font-size:14px;font-weight:600;color:var(--muted)}
+.card h3{font-size:24px}
+.card .metric{font-family:var(--display);font-size:46px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.card .metric-label{font-size:14px;color:var(--muted)}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.card .more{font-weight:600;font-size:15px}
+.card.soft{border-style:dashed;border-color:var(--muted)}
+
+/* Awards */
+.awards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0;border-top:2px solid var(--ink)}
+.award{padding:18px 16px 18px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.award .w{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-ink)}
+.award .show{font-family:var(--display);font-size:21px;font-weight:700}
+.award .cat{font-size:15px;color:var(--muted)}
+
+/* Logos */
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.logos div{height:96px;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--paper);border:1px solid var(--line)}
+.logos img{max-height:52px;width:auto;filter:grayscale(1) contrast(1.1);opacity:.8;transition:filter .2s, opacity .2s}
+.logos div:hover img{filter:none;opacity:1}
+
+/* Form */
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:48px;align-items:start}
+form.enquiry{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--paper);border:2px solid var(--ink);padding:24px}
+form.enquiry .full{grid-column:1 / -1}
+form.enquiry label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+form.enquiry input,form.enquiry select,form.enquiry textarea{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1.5px solid #8a8a82;border-radius:4px;background:#fff;color:var(--ink)}
+form.enquiry textarea{min-height:110px;resize:vertical}
+.form-note{font-size:14px;color:var(--muted)}
+.form-done{grid-column:1 / -1;background:var(--yellow);border:2px solid var(--ink);padding:12px 14px;font-weight:500}
+.form-done[hidden]{display:none}
+.contact-facts{display:grid;gap:18px}
+.contact-facts h3{font-size:20px;margin-bottom:4px}
+
+/* Inner pages */
+.page-head{background:var(--yellow);border-bottom:2px solid var(--ink);padding:56px 0 48px}
+.page-head h1{font-size:clamp(40px,5.4vw,68px);margin:10px 0 14px;max-width:18ch}
+.page-head p{font-size:19px;max-width:56ch}
+.svc-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px 48px;padding:40px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+.svc-detail h2{font-size:34px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.svc-detail ul{margin:12px 0 0;padding-left:20px}
+.svc-detail li{margin:4px 0}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.filters button{font:inherit;font-size:14px;font-weight:600;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;min-height:40px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--yellow)}
+.case{max-width:780px}
+.case .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.case h2{font-size:28px;margin:40px 0 12px}
+.case ul{padding-left:20px;margin:0}
+.case li{margin:8px 0}
+.results{display:grid;gap:0;border-top:2px solid var(--ink);margin-top:8px}
+.results div{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line)}
+.results .num{font-family:var(--display);font-size:36px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.back{display:inline-block;margin-bottom:8px;font-weight:600;color:var(--ink)}
+.method{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;counter-reset:m}
+.method div{border-top:4px solid var(--ink);padding-top:16px}
+.method div:first-child{border-top-color:var(--blue)}
+.method h3{font-size:26px;margin:6px 0 8px}
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.person{border:2px solid var(--ink);padding:20px;display:flex;flex-direction:column;gap:8px}
+.avatar{width:72px;height:72px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:26px}
+.person h3{font-size:22px}
+.person .role{color:var(--muted);font-size:15px}
+.placeholder{border:2px dashed var(--muted);padding:22px;color:var(--muted)}
+.prose{max-width:66ch;display:grid;gap:16px;font-size:18px}
+
+/* Footer */
+footer.site{background:var(--ink);color:#ddd;padding:56px 0 28px;font-size:15px}
+footer.site .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:32px}
+footer.site h4{font-family:var(--body);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow);margin:0 0 10px}
+footer.site a{color:#fff;text-decoration:none}
+footer.site a:hover{text-decoration:underline}
+footer.site ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+footer.site .legal{border-top:1px solid #333;margin-top:40px;padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;color:#aaa}
+.foot-logo{width:200px;margin-bottom:14px}
+
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:6px;font-size:15px;max-width:min(92vw,520px);z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+[data-page][hidden]{display:none}
+
+@media (max-width: 900px){
+  .hero .wrap,.svc-grid,.contact-grid,.svc-detail{grid-template-columns:1fr}
+  footer.site .cols{grid-template-columns:1fr 1fr}
+  .game{height:300px}
+}
+@media (max-width: 560px){
+  body{font-size:16px}
+  .wm-word{font-size:36px}
+  form.enquiry{grid-template-columns:1fr}
+  footer.site .cols{grid-template-columns:1fr}
+  section.block{padding:56px 0}
+  .proof .num{font-size:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="preview-bar"><div class="wrap"><span><b>Preview</b> · draft content and a first design direction for review. Not live.</span><span>fishermen-analytics.com</span></div></div>
+
+<header class="site">
+  <div class="wrap">
+    <nav class="main" aria-label="Main">
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#awards">Awards</a>
+      <a href="#insights">Insights</a>
+      <a href="#careers">Careers</a>
+      <span class="nav-end"><span class="lang" role="group" aria-label="Language">
+        <button type="button" aria-pressed="true" id="lang-en">EN</button>
+        <button type="button" aria-pressed="false" id="lang-ms">BM</button>
+      </span>
+      <a class="btn" href="#contact">Start a project</a></span>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HOME -->
+<div data-page="home">
+  <section class="hero home-hero">
+    <div class="wrap">
+      <div class="brand-zone" aria-hidden="true">Branding area · to design</div>
+      <div>
+        <p class="eyebrow">Independent digital marketing agency · Malaysia · Since 2014</p>
+        <h1>Marketing that starts with <span class="bar">the data.</span></h1>
+        <p class="lede">We turn data and user behaviour into insights you can act on, then put them to work across search, creative, video, social, web and media.</p>
+        <div class="ctas">
+          <a class="btn" href="#contact">Start a project</a>
+          <a class="btn ghost" href="#work">See our work</a>
+        </div>
+      </div>
+      <div class="proof" aria-label="Recent results">
+        <a href="#case-prince-court"><span class="num">+71.2%</span><span class="what">unbranded organic traffic</span><span class="who">Prince Court Medical Centre · in the AI Overview era</span></a>
+        <a href="#case-world-vision"><span class="num">+24%</span><span class="what">child sponsorship revenue from SEO</span><span class="who">World Vision Malaysia</span></a>
+        <a href="#case-southern-valley"><span class="num">+43%</span><span class="what">sales revenue in one quarter</span><span class="who">Southern Valley · Raya Confirm Ong</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="family"><div class="wrap">
+    <p><strong>Part of the Fishermen family.</strong> Our sister agency Fishermen Integrated brings the big ideas. We bring the insight, search visibility and measurable results. One team from strategy to performance.</p>
+    <a href="https://www.fishermen.co">Visit Fishermen Integrated ↗</a>
+  </div></div>
+
+  <section class="block" id="what-we-do" aria-labelledby="svc-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">What we do</p><h2 id="svc-title">Seven services. One data-led team.</h2></div>
+        <p>Data Analytics and SEO/GEO are our core. Everything else we make is shaped by what the numbers say.</p>
+      </div>
+      <div class="svc-grid">
+        <div>
+          <div class="game" id="game">
+            <canvas id="game-canvas" tabindex="0" aria-label="Services game: steer the boat with the arrow keys or your mouse, and cast with Space or a click to catch each service block."></canvas>
+            <div class="hud" aria-hidden="true"><span id="hud-caught">Caught 0 / 7</span><span id="hud-time">30s</span></div>
+            <div class="catch" id="catch" hidden role="status" aria-live="polite"></div>
+            <div class="overlay" id="overlay">
+              <h3 id="ov-title">Cast for our services</h3>
+              <p id="ov-text">Steer the boat, cast your hook and catch all seven services in 30 seconds. Each catch tells you what we do.</p>
+              <button class="btn blue" type="button" id="play">Play</button>
+            </div>
+          </div>
+          <div class="game-help"><span>Arrow keys or mouse to steer · Space or click to cast · Tap on phones</span><a href="#svc-list-start">Skip the game</a></div>
+        </div>
+        <ol class="svc-list" id="svc-list"><li id="svc-list-start"></li></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="block mist" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Selected work</p><h2 id="work-title">The numbers behind the work.</h2></div>
+        <a class="btn ghost" href="#work">All case studies</a>
+      </div>
+      <div class="cards" id="featured"></div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="awards-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Recognition</p><h2 id="awards-title">Award-winning work.</h2></div>
+        <a class="btn ghost" href="#awards">All awards</a>
+      </div>
+      <div class="awards" data-awards></div>
+    </div>
+  </section>
+
+  <section class="block mist" aria-labelledby="clients-title">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="kicker">Clients</p><h2 id="clients-title">Brands we work with.</h2></div><p>Across healthcare, retail, property, education and social causes, in Malaysia and Singapore.</p></div>
+      <div class="logos" id="logos"></div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="home-contact-title">
+    <div class="wrap contact-grid">
+      <div><p class="kicker">Get in touch</p><h2 id="home-contact-title" style="font-size:clamp(34px,4.2vw,52px)">Tell us what you need to grow.</h2><p style="margin-top:14px;color:var(--muted)">Share a few details and our team will come back to you.</p></div>
+      <div data-form></div>
+    </div>
+  </section>
+</div>
+
+<!-- SERVICES -->
+<div data-page="services" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Services</p><h1>Data first. Then everything else.</h1><p>Data Analytics and SEO/GEO are where we started and what we are known for. Our creative, video, social, web and media work is built on the same insight.</p></div></section>
+  <div class="wrap" id="svc-details"></div>
+  <section class="block"><div class="wrap" style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center"><h2 style="font-size:36px">Need more than one? That is how we work best.</h2><a class="btn" href="#contact">Start a project</a></div></section>
+</div>
+
+<!-- WORK -->
+<div data-page="work" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Work</p><h1>Results you can measure.</h1><p>Case studies across search, analytics, content and creative. Results are shown as percentages to protect client data.</p></div></section>
+  <section class="block"><div class="wrap">
+    <div class="filters" id="filters" role="group" aria-label="Filter by service"></div>
+    <div class="cards" id="all-work"></div>
+  </div></section>
+</div>
+
+<!-- CASE DETAIL -->
+<div data-page="case" hidden>
+  <section class="page-head"><div class="wrap"><a class="back" href="#work">← All work</a><p class="eyebrow" id="case-client"></p><h1 id="case-title"></h1><div class="meta" id="case-meta"></div></div></section>
+  <section class="block"><div class="wrap case" id="case-body"></div></section>
+</div>
+
+<!-- ABOUT -->
+<div data-page="about" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">About</p><h1>The data-led Fishermen.</h1><p>Fishermen Analytics is an independent Malaysian agency, founded in 2014. We help brands understand their audience through data and user behaviour, then reach them with search, content and creative that performs.</p></div></section>
+  <section class="block"><div class="wrap">
+    <div class="sec-head"><div><p class="kicker">How we work</p><h2>Find the fish. Craft the hook. Reel in the results.</h2></div></div>
+    <div class="method">
+      <div><p class="kicker">01 · Insight</p><h3>Find the fish</h3><p>Every audience behaves differently. We use tools like GWI, social insight platforms and your own analytics to understand exactly who we are trying to reach.</p></div>
+      <div><p class="kicker">02 · Creative</p><h3>Craft the hook</h3><p>Ideas, content and entertainment built on that insight, so the message lands with the people it was made for.</p></div>
+      <div><p class="kicker">03 · Analytics</p><h3>Reel in the results</h3><p>We measure, test and optimise across search, social and the web, so budget moves to what works.</p></div>
+    </div>
+  </div></section>
+  <section class="block mist"><div class="wrap">
+    <div class="sec-head"><div><p class="kicker">Leadership</p><h2>The people behind the data.</h2></div></div>
+    <div class="team">
+      <div class="person"><div class="avatar" aria-hidden="true">DB</div><h3>David Alan Bates</h3><p class="role">Co-Founder &amp; Managing Director</p><p class="form-note">[Photo and short bio to come]</p></div>
+      <div class="person"><div class="avatar" aria-hidden="true">ML</div><h3>Mark Darren Lee</h3><p class="role">Co-Founder</p><p class="form-note">[Photo and short bio to come]</p></div>
+      <div class="person"><div class="avatar" aria-hidden="true">JL</div><h3>Joyce Lee</h3><p class="role">Senior Manager, Content &amp; Strategy</p><p class="form-note">[Photo and short bio to come]</p></div>
+    </div>
+  </div></section>
+  <section class="block"><div class="wrap">
+    <div class="sec-head"><div><p class="kicker">The Fishermen family</p><h2>Two agencies. One team when you need it.</h2></div></div>
+    <div class="prose"><p>Fishermen Analytics works alongside our sister agency, Fishermen Integrated. They are known for big creative ideas. We are known for insight, search visibility and measurable results.</p><p>Clients can work with either of us, or both: strategy and creative from Integrated, data, SEO/GEO and performance from Analytics.</p><p><a href="https://www.fishermen.co">Visit Fishermen Integrated ↗</a></p></div>
+  </div></section>
+</div>
+
+<!-- AWARDS -->
+<div data-page="awards" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Awards</p><h1>Recognised for work that performs.</h1><p>Wins for search, audience and relationship marketing, and a Webby shared with Fishermen Integrated.</p></div></section>
+  <section class="block"><div class="wrap"><div class="awards" data-awards></div></div></section>
+</div>
+
+<!-- INSIGHTS -->
+<div data-page="insights" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Insights</p><h1>Notes on search, AI and data.</h1><p>Articles from our team on SEO, GEO, analytics and what is changing in how people find brands.</p></div></section>
+  <section class="block"><div class="wrap"><div class="cards">
+    <div class="card soft"><p class="client">GEO</p><h3>[Article title]</h3><p class="metric-label">Articles are published from the CMS.</p></div>
+    <div class="card soft"><p class="client">Analytics</p><h3>[Article title]</h3><p class="metric-label">Articles are published from the CMS.</p></div>
+    <div class="card soft"><p class="client">SEO</p><h3>[Article title]</h3><p class="metric-label">Articles are published from the CMS.</p></div>
+  </div></div></section>
+</div>
+
+<!-- CAREERS -->
+<div data-page="careers" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Careers</p><h1>Join the Fishermen.</h1><p>We are always keen to meet analysts, SEO specialists, writers and creatives who like working with data.</p></div></section>
+  <section class="block"><div class="wrap"><div class="placeholder">[Open roles appear here, published from the CMS. If there are none, this shows how to send a CV.]</div></div></section>
+</div>
+
+<!-- CONTACT -->
+<div data-page="contact" hidden>
+  <section class="page-head"><div class="wrap"><p class="eyebrow">Contact</p><h1>Let’s talk.</h1><p>Tell us about your brand and what you want to achieve.</p></div></section>
+  <section class="block"><div class="wrap contact-grid">
+    <div class="contact-facts">
+      <div><h3>Office</h3><p>D-09-02, Level 9, SkyPark One City<br>Jalan USJ 25/1, 47650 Subang Jaya<br>Selangor, Malaysia</p></div>
+      <div><h3>Email</h3><p>[Email address]</p></div>
+      <div><h3>Phone</h3><p>[Phone number]</p></div>
+      <div><h3>Who we work with</h3><p>Clients across Malaysia and Singapore.</p></div>
+    </div>
+    <div data-form></div>
+  </div></section>
+</div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div><img class="foot-logo" src="assets/logo.png" alt="Fishermen Analytics"><p>Independent digital marketing agency, Malaysia. Since 2014.</p><p style="margin-top:10px">Part of the Fishermen family, alongside <a href="https://www.fishermen.co">Fishermen Integrated</a>.</p></div>
+      <div><h4>Services</h4><ul id="foot-svc"></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#work">Work</a></li><li><a href="#about">About</a></li><li><a href="#awards">Awards</a></li><li><a href="#insights">Insights</a></li><li><a href="#careers">Careers</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div><h4>Visit</h4><p>D-09-02, Level 9, SkyPark One City, Jalan USJ 25/1, 47650 Subang Jaya, Selangor</p><p style="margin-top:10px">LinkedIn · Instagram · Facebook</p></div>
+    </div>
+    <div class="legal"><span>© 2026 Fishermen Analytics Sdn Bhd</span><span>Privacy policy · Terms</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+const SERVICES = [
+  {id:'data-analytics', name:'Data Analytics', core:true, summary:'Tracking, dashboards and audience insight that show what is really driving your growth, and what to do next.', items:['Google Analytics 4 and tag setup','Dashboards and performance reporting','Audience and behaviour insight with GWI and social insight tools','Conversion and funnel optimisation']},
+  {id:'seo-geo', name:'SEO / GEO Optimisation', core:true, summary:'Visibility on Google and in AI answers from Google AI Overviews, ChatGPT, Gemini and Perplexity.', items:['Technical and on-page SEO','Content strategy and predictive keyword research','AI Overview and AI assistant visibility (GEO)','Schema, site health and Core Web Vitals']},
+  {id:'creative', name:'Creative Production', summary:'Campaign ideas, design and copy built on what the data says about your audience.', items:['Campaign concepts','Design and copywriting','Insight-led content','English and Bahasa Malaysia content']},
+  {id:'video', name:'Video Production', summary:'Film and short-form video from script to screen, made for the platforms your audience watches.', items:['Concept and scriptwriting','Production and direction','Editing and post-production','Short-form social video']},
+  {id:'web', name:'Website Development', summary:'Fast, measurable websites and CMS builds, ready for search and AI from day one.', items:['Corporate websites and microsites','CMS design and build','Mobile-first UI/UX','Gamified and interactive experiences']},
+  {id:'social', name:'Social Media Management', summary:'Always-on content, community management and reporting across your social channels.', items:['Content calendars and creation','Community management','Influencer and creator partnerships','Social reporting']},
+  {id:'media', name:'Media Management', summary:'Paid media planning and buying across search, social and display, optimised against real outcomes.', items:['Media planning and buying','Search and social ads','Performance funnels and retargeting','Ongoing optimisation and reporting']}
+];
+
+const WORK = [
+  {id:'prince-court', client:'Prince Court Medical Centre', title:'Growing search in the AI Overview era', svc:['seo-geo','data-analytics'], metric:'+71.2%', label:'unbranded organic traffic', note:'SEO/GEO showcase', featured:true,
+   challenge:'AI Overviews now answer health questions on the results page, so fewer people click through to hospital websites. Searches for the Prince Court name were also falling, down 11.9%, while the hospital needed to stay among the top private hospitals in the Central Region.',
+   did:['Planned content from trending searches and real patient questions, tied to Prince Court’s priority specialties: 137 articles written, rewritten or optimised in 11 months.','Structured every page for AI answers: clear questions, direct answers, FAQ and local schema, and an llms.txt file.','Fixed the technical foundations so search engines and AI tools can crawl, understand and cite the site.'],
+   period:'Organic: Sep 2025 to Jul 2026 vs the year before. AI: Aug 2025 vs Jul 2026.',
+   results:[['+14.9%','organic sessions, despite an 11.9% drop in branded searches and AI Overviews taking clicks'],['+71.2%','unbranded organic traffic: new patients finding Prince Court through conditions and treatments'],['+442%','organic article sessions, with specialty-page sessions up 12.3%'],['+15.2%','organic conversions, with returning organic visitors up 12.7%'],['0 → 47','AI visibility score; AI search health up from 60 to 82, SEO score from 65 to 79'],['+79%','AI citations and pages cited by AI, with AI assistants now a new source of visitors']]},
+  {id:'world-vision', client:'World Vision Malaysia', title:'Sponsoring more children with SEO', svc:['seo-geo','data-analytics'], metric:'+30%', label:'organic traffic', note:'Winner, Marketing Excellence Awards · Search Marketing', featured:true,
+   challenge:'Organic traffic fell 11% while searches in the sector rose, and child sponsorships dropped 4.7%. Larger charities were outspending World Vision on paid search.',
+   did:['Used Google Analytics to find the pages people read before donating, and optimised those first.','Rewrote the site in two months in a conversational, question-and-answer style to win position zero, voice and AI queries.','Kept content fresh and had each page re-crawled as soon as it went live.'],
+   period:'H2 2023 vs H2 2022.',
+   results:[['+30%','organic traffic'],['+66%','organic search impressions'],['+24%','child sponsorship revenue, with 7.5% more children sponsored'],['+83%','revenue from other donation programmes']]},
+  {id:'kwc', client:'KWC Fashion Wholesale', title:'Bilingual fashion storytelling', svc:['seo-geo','creative'], metric:'+26.5%', label:'organic search traffic', note:'Finalist, Marketing Excellence Awards · Multilingual Marketing',
+   challenge:'After Google rolled out AI Overviews, organic search visits to Malaysia’s largest fashion wholesale mall fell 51% in six months, in a market already dominated by bigger retail hubs.',
+   did:['Wrote fashion content in English and Bahasa Malaysia built to be picked up by AI Overviews, in a truly Malaysian voice rather than straight translation.','Ran weekly predictive keyword research in both languages, so articles on trends, events and festive fashion went live before interest peaked.'],
+   period:'Eight months before vs eight months after.',
+   results:[['+26.5%','organic search traffic, overtaking pre-AI Overview levels'],['+12.8%','search impressions'],['0% → 20%','of target fashion keywords featuring KWC in AI Overviews']]},
+  {id:'southern-valley', client:'Southern Valley (Farmbyte)', title:'Raya Confirm Ong', svc:['creative','video','social','seo-geo'], metric:'+43%', label:'sales revenue', note:'Winner, Marketing Excellence Awards · Specific Audience', featured:true,
+   challenge:'A premium MD2 pineapple brand less than a year old, in a market where pineapple consumption has fallen since 2017 and rivals had a ten-year head start.',
+   did:['Found the audience in the data: Malay–Chinese marriages are rising, and Chinese households buy pineapples for prosperity (“ong”).','Made a Hari Raya film about an inter-ethnic couple, starring Alynna Wong, with pineapples bringing ong to the celebrations.','Placed content on popular local sites to build long-term search visibility for pineapple searches.'],
+   period:'Campaign quarter vs the quarter before.',
+   results:[['+43%','sales revenue'],['+40%','retail distribution'],['+990%','Instagram profile visits during the campaign, and +1,000% on TikTok'],['Top 2024','named one of the top Hari Raya videos of 2024 by Cilisos and Beautiful Nara']]},
+  {id:'taylors', client:'Taylor’s University', title:'SEO and lead generation', svc:['seo-geo'], note:'Winner, Marketing Excellence Awards · Search Marketing'},
+  {id:'petronas', client:'PETRONAS', title:'Corporate site, digital CI and CMS', svc:['web'], metric:'−4.5%', label:'bounce rate in the first month'},
+  {id:'petronas-sites', client:'PETRONAS', title:'Integrated Report and FLOW Magazine sites', svc:['web']},
+  {id:'liam', client:'Life Insurance Association of Malaysia', title:'#BukanExtra 2.0 gamified website', svc:['web','social']},
+  {id:'harvey-feed', client:'Harvey Norman', title:'Not Your Parents’ Feed', svc:['creative','social'], metric:'+49%', label:'organic search interest'},
+  {id:'harvey-sabah', client:'Harvey Norman', title:'I Love Sabah store launch', svc:['creative','social']},
+  {id:'farmbyte', client:'Farmbyte', title:'A not-so-corporate video', svc:['video']}
+];
+
+const AWARDS = [
+  ['Marketing Excellence Awards','Search Engine Marketing'],
+  ['Marketing Excellence Awards','Relationship Marketing'],
+  ['Marketing Excellence Awards','Multilingual Marketing'],
+  ['Marketing Excellence Awards','Specific Audience'],
+  ['MARKies Awards','Most Creative Social Media'],
+  ['Webby Awards','People’s Voice, Best Use of Video or Moving Image · with Fishermen Integrated']
+];
+
+const LOGOS = [
+  ['prince-court.png','Prince Court Medical Centre'],['world-vision.svg','World Vision'],['harvey-norman.png','Harvey Norman'],
+  ['zuellig-pharma.svg','Zuellig Pharma'],['persol.svg','PERSOL'],['gleneagles-hospitals.png','Gleneagles Hospitals'],
+  ['pantai-hospitals.png','Pantai Hospitals'],['malaysia-healthcare.png','Malaysia Healthcare'],['paramount-property.png','Paramount Property'],
+  ['ellgy-plus.png','Ellgy Plus'],['kwc.png','KWC Fashion Wholesale']
+];
+
+const svcName = id => (SERVICES.find(s => s.id === id) || {}).name || id;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DETAIL = new Set(['prince-court','world-vision','kwc','southern-valley']);
+
+function card(w){
+  const tags = w.svc.map(s => `<span class="tag ${s==='seo-geo'||s==='data-analytics'?'':'o'}">${esc(svcName(s))}</span>`).join('');
+  const metric = w.metric ? `<div><div class="metric">${esc(w.metric)}</div><div class="metric-label">${esc(w.label)}</div></div>` : '';
+  const note = w.note ? `<p class="metric-label">${esc(w.note)}</p>` : '';
+  if (DETAIL.has(w.id)) return `<a class="card" href="#case-${w.id}"><p class="client">${esc(w.client)}</p><h3>${esc(w.title)}</h3>${metric}${note}<div class="tags">${tags}</div><span class="more">Read the case study →</span></a>`;
+  return `<div class="card soft"><p class="client">${esc(w.client)}</p><h3>${esc(w.title)}</h3>${metric}${note}<div class="tags">${tags}</div><span class="metric-label">Full case study coming soon</span></div>`;
+}
+
+function renderStatic(){
+  document.getElementById('svc-list').innerHTML = SERVICES.map((s,i) => `<li${i===0?' id="svc-list-start"':''}><a href="#${s.id}"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="name">${esc(s.name)}<small>${esc(s.summary)}</small></span>${s.core?'<span class="tag">Our core</span>':''}</a></li>`).join('');
+  document.getElementById('foot-svc').innerHTML = SERVICES.map(s => `<li><a href="#${s.id}">${esc(s.name)}</a></li>`).join('');
+  document.getElementById('featured').innerHTML = WORK.filter(w => w.featured).map(card).join('');
+  document.querySelectorAll('[data-awards]').forEach(el => el.innerHTML = AWARDS.map(a => `<div class="award"><span class="w">Winner</span><span class="show">${esc(a[0])}</span><span class="cat">${esc(a[1])}</span></div>`).join(''));
+  document.getElementById('logos').innerHTML = LOGOS.map(l => `<div><img src="assets/clients/${l[0]}" alt="${esc(l[1])}"></div>`).join('');
+  document.getElementById('svc-details').innerHTML = SERVICES.map((s,i) => `<article class="svc-detail" id="${s.id}"><div><p class="kicker">${String(i+1).padStart(2,'0')}</p><h2>${esc(s.name)} ${s.core?'<span class="tag">Our core</span>':''}</h2></div><div><p style="font-size:19px">${esc(s.summary)}</p><ul>${s.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${relatedWork(s.id)}</div></article>`).join('');
+  const formHTML = `<form class="enquiry" novalidate>
+      <div><label for="f-name-ID">Name</label><input id="f-name-ID" name="name" autocomplete="name" required></div>
+      <div><label for="f-company-ID">Company</label><input id="f-company-ID" name="company" autocomplete="organization"></div>
+      <div><label for="f-email-ID">Email</label><input id="f-email-ID" name="email" type="email" autocomplete="email" required></div>
+      <div><label for="f-phone-ID">Phone</label><input id="f-phone-ID" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="full"><label for="f-svc-ID">What do you need help with?</label><select id="f-svc-ID" name="service"><option>Not sure yet</option>${SERVICES.map(s=>`<option>${esc(s.name)}</option>`).join('')}</select></div>
+      <div class="full"><label for="f-msg-ID">Tell us a little about it</label><textarea id="f-msg-ID" name="message"></textarea></div>
+      <div class="full" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between"><span class="form-note">We reply within [X] working days.</span><button class="btn" type="submit">Send enquiry</button></div>
+      <p class="form-done" hidden>Preview only: this form is not connected yet. On the live site, enquiries go to the CMS and your team’s inbox.</p>
+    </form>`;
+  document.querySelectorAll('[data-form]').forEach((el,i) => {
+    el.innerHTML = formHTML.replaceAll('-ID', '-' + i);
+    el.querySelector('form').addEventListener('submit', e => { e.preventDefault(); el.querySelector('.form-done').hidden = false; });
+  });
+  renderWork('all');
+}
+
+function relatedWork(id){
+  const rel = WORK.filter(w => w.svc.includes(id) && DETAIL.has(w.id)).slice(0,2);
+  if (!rel.length) return '';
+  return `<p style="margin-top:14px;font-size:15px">Related work: ${rel.map(w=>`<a href="#case-${w.id}">${esc(w.client)}</a>`).join(' · ')}</p>`;
+}
+
+function renderWork(filter){
+  const f = document.getElementById('filters');
+  const opts = [['all','All work']].concat(SERVICES.map(s => [s.id, s.name]));
+  f.innerHTML = opts.map(o => `<button type="button" data-f="${o[0]}" aria-pressed="${o[0]===filter}">${esc(o[1])}</button>`).join('');
+  f.querySelectorAll('button').forEach(b => b.addEventListener('click', () => renderWork(b.dataset.f)));
+  const list = WORK.filter(w => filter === 'all' || w.svc.includes(filter));
+  document.getElementById('all-work').innerHTML = list.length ? list.map(card).join('') : '<p>No case studies for this service yet.</p>';
+}
+
+function renderCase(id){
+  const w = WORK.find(x => x.id === id);
+  if (!w || !DETAIL.has(id)) return false;
+  document.getElementById('case-client').textContent = w.client;
+  document.getElementById('case-title').textContent = w.title;
+  document.getElementById('case-meta').innerHTML = (w.note ? `<span class="tag y">${esc(w.note)}</span>` : '') + w.svc.map(s => `<span class="tag o" style="border-color:var(--ink);color:var(--ink)">${esc(svcName(s))}</span>`).join('');
+  document.getElementById('case-body').innerHTML = `
+    <h2 style="margin-top:0">The challenge</h2><p style="font-size:19px">${esc(w.challenge)}</p>
+    <h2>What we did</h2><ul>${w.did.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>
+    <h2>Results</h2><p class="form-note">${esc(w.period)}</p>
+    <div class="results">${w.results.map(r=>`<div><span class="num">${esc(r[0])}</span><span>${esc(r[1])}</span></div>`).join('')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:40px"><a class="btn" href="#contact">Start a project</a><a class="btn ghost" href="#work">More work</a></div>`;
+  return true;
+}
+
+const PAGES = ['home','services','work','about','awards','insights','careers','contact'];
+function route(){
+  const h = (location.hash || '#home').slice(1);
+  let page = 'home', scrollTo = null;
+  if (PAGES.includes(h)) page = h;
+  else if (h.startsWith('case-') && renderCase(h.slice(5))) page = 'case';
+  else if (SERVICES.some(s => s.id === h)) { page = 'services'; scrollTo = h; }
+  else if (h === 'what-we-do' || h === 'svc-list-start') { page = 'home'; scrollTo = h; }
+  document.querySelectorAll('[data-page]').forEach(el => el.hidden = el.dataset.page !== page);
+  document.querySelectorAll('nav.main a').forEach(a => {
+    const t = a.getAttribute('href').slice(1);
+    if (t === page || (page === 'case' && t === 'work')) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+  });
+  if (scrollTo) requestAnimationFrame(() => { const el = document.getElementById(scrollTo); if (el) el.scrollIntoView(); });
+  else window.scrollTo(0,0);
+  if (page !== 'home') Game.stop(true);
+  else Game.resize();
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 4200);
+}
+document.getElementById('lang-ms').addEventListener('click', () => toast('The Bahasa Malaysia version will be added once the English copy is signed off.'));
+
+/* ---------- Services game ---------- */
+const Game = (() => {
+  const wrap = document.getElementById('game');
+  const cv = document.getElementById('game-canvas');
+  const ctx = cv.getContext('2d');
+  const overlay = document.getElementById('overlay');
+  const ovTitle = document.getElementById('ov-title');
+  const ovText = document.getElementById('ov-text');
+  const playBtn = document.getElementById('play');
+  const catchBox = document.getElementById('catch');
+  const hudCaught = document.getElementById('hud-caught');
+  const hudTime = document.getElementById('hud-time');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ROUND = 30;
+  let W = 0, H = 0, dpr = 1, running = false, raf = 0, last = 0;
+  let boat, hooks, blocks, dir, timeLeft, caught, keys = {}, catchTimer = 0;
+
+  function resize(){
+    const r = wrap.getBoundingClientRect();
+    if (!r.width) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    if (!running) drawIdle();
+  }
+
+  function layout(){
+    const pad = 14, gap = 10, top = 40;
+    const perRow = W < 420 ? 3 : 4;
+    const bw = Math.min(150, (W - pad*2 - gap*(perRow-1)) / perRow - 10);
+    const bh = 34;
+    blocks = SERVICES.map((s,i) => {
+      const row = Math.floor(i / perRow), col = i % perRow;
+      return {s, x: pad + col*(bw+gap), y: top + row*(bh+gap), w: bw, h: bh, caught:false};
+    });
+    dir = 1;
+  }
+
+  function start(){
+    resize(); layout();
+    boat = {x: W/2, w: 64};
+    hooks = []; timeLeft = ROUND; caught = 0; keys = {};
+    overlay.hidden = true; catchBox.hidden = true;
+    hudCaught.textContent = 'Caught 0 / 7'; hudTime.textContent = ROUND + 's';
+    running = true; last = performance.now();
+    cv.focus({preventScroll:true});
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+  }
+
+  function stop(silent){
+    if (!running) return;
+    running = false; cancelAnimationFrame(raf);
+    if (silent){ overlay.hidden = false; ovTitle.textContent = 'Cast for our services'; ovText.textContent = 'Steer the boat, cast your hook and catch all seven services in 30 seconds. Each catch tells you what we do.'; playBtn.textContent = 'Play'; drawIdle(); }
+  }
+
+  function end(won){
+    running = false; cancelAnimationFrame(raf);
+    overlay.hidden = false;
+    if (won){
+      ovTitle.textContent = 'You caught all seven.';
+      ovText.innerHTML = 'That is the full team. Now let’s talk about your brand. <a href="#contact" style="color:var(--yellow);font-weight:600">Start a project →</a>';
+    } else {
+      ovTitle.textContent = `You caught ${caught} of 7.`;
+      ovText.textContent = 'Not bad. The rest are in the list beside the game, or have another cast.';
+    }
+    playBtn.textContent = 'Play again';
+  }
+
+  function cast(){
+    if (!running) return;
+    if (hooks.length >= 2) return;
+    hooks.push({x: boat.x, y: H - 46});
+  }
+
+  function showCatch(s){
+    catchBox.innerHTML = `<b>${esc(s.name)}</b>${esc(s.summary)} <a href="#${s.id}">More →</a>`;
+    catchBox.hidden = false; catchTimer = 3.2;
+  }
+
+  function tick(now){
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    timeLeft -= dt;
+    // boat
+    const sp = 360;
+    if (keys.ArrowLeft) boat.x -= sp*dt;
+    if (keys.ArrowRight) boat.x += sp*dt;
+    boat.x = Math.max(boat.w/2 + 6, Math.min(W - boat.w/2 - 6, boat.x));
+    // blocks drift
+    const live = blocks.filter(b => !b.caught);
+    const speed = (reduce ? 40 : 70) + (7 - live.length) * 6;
+    let hitEdge = false;
+    live.forEach(b => { b.x += dir*speed*dt; if (b.x < 8 || b.x + b.w > W - 8) hitEdge = true; });
+    if (hitEdge){ dir *= -1; live.forEach(b => { b.x += dir*speed*dt*2; b.y = Math.min(b.y + 10, H - 130); }); }
+    // hooks
+    hooks.forEach(h => h.y -= 520*dt);
+    hooks = hooks.filter(h => {
+      if (h.y < 0) return false;
+      const hit = live.find(b => !b.caught && h.x > b.x && h.x < b.x + b.w && h.y > b.y && h.y < b.y + b.h);
+      if (hit){ hit.caught = true; caught++; hudCaught.textContent = `Caught ${caught} / 7`; showCatch(hit.s); return false; }
+      return true;
+    });
+    if (catchTimer > 0){ catchTimer -= dt; if (catchTimer <= 0) catchBox.hidden = true; }
+    hudTime.textContent = Math.max(0, Math.ceil(timeLeft)) + 's';
+    draw();
+    if (caught === 7) return end(true);
+    if (timeLeft <= 0) return end(false);
+    raf = requestAnimationFrame(tick);
+  }
+
+  function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+  function drawWater(){
+    ctx.fillStyle = '#111111'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(0,162,232,.35)'; ctx.lineWidth = 2;
+    const y0 = H - 30;
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 8){ const y = y0 + Math.sin(x/18 + (running ? last/400 : 0))*3; x ? ctx.lineTo(x,y) : ctx.moveTo(x,y); }
+    ctx.stroke();
+  }
+
+  function drawBoat(x){
+    const y = H - 34;
+    ctx.fillStyle = '#FFF200';
+    ctx.beginPath(); ctx.moveTo(x-32,y-12); ctx.lineTo(x+32,y-12); ctx.lineTo(x+22,y+4); ctx.lineTo(x-22,y+4); ctx.closePath(); ctx.fill();
+    ctx.fillRect(x-2, y-30, 3, 18);
+    ctx.strokeStyle = '#FFF200'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y-30); ctx.lineTo(x+14, y-40); ctx.stroke();
+  }
+
+  function drawBlocks(){
+    ctx.font = `600 ${W < 420 ? 11 : 12.5}px "Work Sans", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    blocks.forEach(b => {
+      if (b.caught) return;
+      roundRect(b.x, b.y, b.w, b.h, 4);
+      ctx.fillStyle = b.s.core ? '#00A2E8' : '#FFF200'; ctx.fill();
+      ctx.fillStyle = '#111111';
+      let label = b.s.name.replace(' Optimisation','').replace(' Management','').replace(' Production','').replace(' Development','');
+      ctx.fillText(label, b.x + b.w/2, b.y + b.h/2 + 1, b.w - 8);
+    });
+  }
+
+  function drawHooks(){
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2;
+    hooks.forEach(h => {
+      ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(h.x, h.y + 18); ctx.stroke();
+      ctx.beginPath(); ctx.arc(h.x - 4, h.y + 2, 4, 0, Math.PI, false); ctx.stroke();
+    });
+  }
+
+  function draw(){ drawWater(); drawBlocks(); drawHooks(); drawBoat(boat.x); }
+  function drawIdle(){ if (!W) return; layout(); boat = {x: W/2, w:64}; hooks = []; drawWater(); drawBlocks(); drawBoat(W/2); }
+
+  playBtn.addEventListener('click', start);
+  cv.addEventListener('keydown', e => {
+    if (!running) return;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ keys[e.key] = true; e.preventDefault(); }
+    if (e.key === ' ' || e.key === 'ArrowUp'){ cast(); e.preventDefault(); }
+  });
+  cv.addEventListener('keyup', e => { keys[e.key] = false; });
+  cv.addEventListener('pointermove', e => { if (!running) return; const r = cv.getBoundingClientRect(); boat.x = e.clientX - r.left; });
+  cv.addEventListener('pointerdown', e => { if (!running) return; const r = cv.getBoundingClientRect(); boat.x = e.clientX - r.left; cast(); });
+  new ResizeObserver(() => resize()).observe(wrap);
+  document.fonts && document.fonts.ready.then(() => { if (!running) drawIdle(); });
+
+  return {resize, stop};
+})();
+
+renderStatic();
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
