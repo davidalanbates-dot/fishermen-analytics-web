@@ -15,6 +15,7 @@ npm install
 cp .env.example .env   # then set PAYLOAD_SECRET
 npm run dev:local      # starts the local database, then the site and CMS
 npm run seed           # in a second terminal: loads services, case studies, awards, logos, pages
+npm run seed:ms        # then: loads the Bahasa Malaysia draft (scripts/content/ms.ts)
 ```
 
 Open http://localhost:3000 for the site and http://localhost:3000/admin to create the first user
@@ -58,6 +59,7 @@ Pages, services, case studies, insights and jobs have drafts, scheduled publishi
 | `npm run dev:local`              | Start the local database, then the site and CMS                   |
 | `npm run db`                     | Start only the local database                                     |
 | `npm run seed`                   | Load the agreed content into the CMS (safe to rerun)              |
+| `npm run seed:ms`                | Load the BM draft; fills empty BM fields, keeps CMS edits (`-- --force` overwrites). Rerun after `npm run seed`, which resets shared block rows |
 | `npm run dev`                    | Start the site and CMS against `DATABASE_URL`                     |
 | `npm run generate:types`         | Regenerate `src/payload-types.ts` after changing collections      |
 | `npm run generate:importmap`     | Regenerate the admin import map after adding admin components     |

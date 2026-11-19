@@ -59,1803 +59,1802 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji'
+  | 'Pacific/Fiji';
 
 export interface Config {
   auth: {
-    users: UserAuthOperations
-  }
-  blocks: {}
+    users: UserAuthOperations;
+  };
+  blocks: {};
   collections: {
-    pages: Page
-    services: Service
-    'case-studies': CaseStudy
-    awards: Award
-    insights: Insight
-    team: Team
-    clients: Client
-    jobs: Job
-    media: Media
-    users: User
-    redirects: Redirect
-    forms: Form
-    'form-submissions': FormSubmission
-    'payload-kv': PayloadKv
-    'payload-jobs': PayloadJob
-    'payload-locked-documents': PayloadLockedDocument
-    'payload-preferences': PayloadPreference
-    'payload-migrations': PayloadMigration
-  }
-  collectionsJoins: {}
+    pages: Page;
+    services: Service;
+    'case-studies': CaseStudy;
+    awards: Award;
+    insights: Insight;
+    team: Team;
+    clients: Client;
+    jobs: Job;
+    media: Media;
+    users: User;
+    redirects: Redirect;
+    forms: Form;
+    'form-submissions': FormSubmission;
+    'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
+    'payload-locked-documents': PayloadLockedDocument;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {};
   collectionsSelect: {
-    pages: PagesSelect<false> | PagesSelect<true>
-    services: ServicesSelect<false> | ServicesSelect<true>
-    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>
-    awards: AwardsSelect<false> | AwardsSelect<true>
-    insights: InsightsSelect<false> | InsightsSelect<true>
-    team: TeamSelect<false> | TeamSelect<true>
-    clients: ClientsSelect<false> | ClientsSelect<true>
-    jobs: JobsSelect<false> | JobsSelect<true>
-    media: MediaSelect<false> | MediaSelect<true>
-    users: UsersSelect<false> | UsersSelect<true>
-    redirects: RedirectsSelect<false> | RedirectsSelect<true>
-    forms: FormsSelect<false> | FormsSelect<true>
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>
-    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
-    'payload-locked-documents':
-      PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
-  }
+    pages: PagesSelect<false> | PagesSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    awards: AwardsSelect<false> | AwardsSelect<true>;
+    insights: InsightsSelect<false> | InsightsSelect<true>;
+    team: TeamSelect<false> | TeamSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+  };
   db: {
-    defaultIDType: number
-  }
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ms') | ('en' | 'ms')[]
+    defaultIDType: number;
+  };
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ms') | ('en' | 'ms')[];
   globals: {
-    'site-settings': SiteSetting
-  }
+    'site-settings': SiteSetting;
+  };
   globalsSelect: {
-    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>
-  }
-  locale: 'en' | 'ms'
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
+  locale: 'en' | 'ms';
   widgets: {
-    collections: CollectionsWidget
-  }
-  user: User
+    collections: CollectionsWidget;
+  };
+  user: User;
   jobs: {
     tasks: {
-      schedulePublish: TaskSchedulePublish
+      schedulePublish: TaskSchedulePublish;
       inline: {
-        input: unknown
-        output: unknown
-      }
-    }
-    workflows: unknown
-  }
+        input: unknown;
+        output: unknown;
+      };
+    };
+    workflows: unknown;
+  };
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   login: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   registerFirstUser: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
   unlock: {
-    email: string
-    password: string
-  }
+    email: string;
+    password: string;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
-  id: number
-  title: string
+  id: number;
+  title: string;
   layout?:
     | (
         | {
             /**
              * Homepage only. The sonar shows the featured case study results.
              */
-            brandingArea?: boolean | null
-            eyebrow?: string | null
-            heading: string
-            intro?: string | null
+            brandingArea?: boolean | null;
+            eyebrow?: string | null;
+            heading: string;
+            intro?: string | null;
             links?:
               | {
-                  label: string
-                  href: string
-                  id?: string | null
+                  label: string;
+                  href: string;
+                  id?: string | null;
                 }[]
-              | null
-            image?: (number | null) | Media
-            id?: string | null
-            blockName?: string | null
-            blockType: 'hero'
+              | null;
+            image?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'hero';
           }
         | {
             content: {
               root: {
-                type: string
+                type: string;
                 children: {
-                  type: any
-                  version: number
-                  [k: string]: unknown
-                }[]
-                direction: ('ltr' | 'rtl') | null
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-                indent: number
-                version: number
-              }
-              [k: string]: unknown
-            }
-            id?: string | null
-            blockName?: string | null
-            blockType: 'richText'
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
           }
         | {
-            heading?: string | null
-            intro?: string | null
+            heading?: string | null;
+            intro?: string | null;
             /**
              * Homepage only. Labels come from the Services collection.
              */
-            showGame?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'services'
+            showGame?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'services';
           }
         | {
-            heading?: string | null
+            heading?: string | null;
             /**
              * Leave empty to use case studies marked "Feature on homepage".
              */
-            caseStudies?: (number | CaseStudy)[] | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'featuredWork'
+            caseStudies?: (number | CaseStudy)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'featuredWork';
           }
         | {
-            heading?: string | null
+            heading?: string | null;
             steps?:
               | {
-                  title: string
-                  text?: string | null
-                  id?: string | null
+                  title: string;
+                  text?: string | null;
+                  id?: string | null;
                 }[]
-              | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'method'
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'method';
           }
         | {
-            heading?: string | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'awards'
+            heading?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'awards';
           }
         | {
-            heading?: string | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'clientLogos'
+            heading?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'clientLogos';
           }
         | {
-            heading?: string | null
-            text?: string | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'family'
+            heading?: string | null;
+            text?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'family';
           }
         | {
-            heading?: string | null
+            heading?: string | null;
             items?:
               | {
-                  question: string
-                  answer: string
-                  id?: string | null
+                  question: string;
+                  answer: string;
+                  id?: string | null;
                 }[]
-              | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'faq'
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'faq';
           }
         | {
-            heading: string
-            text?: string | null
-            label?: string | null
-            href?: string | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'cta'
+            heading: string;
+            text?: string | null;
+            label?: string | null;
+            href?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cta';
           }
         | {
-            heading?: string | null
-            intro?: string | null
-            form: number | Form
-            id?: string | null
-            blockName?: string | null
-            blockType: 'enquiryForm'
+            heading?: string | null;
+            intro?: string | null;
+            form: number | Form;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'enquiryForm';
           }
       )[]
-    | null
+    | null;
   /**
    * Used in the URL. Leave empty to generate from the title.
    */
-  slug: string
+  slug: string;
   meta?: {
-    title?: string | null
-    description?: string | null
+    title?: string | null;
+    description?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (number | null) | Media
-  }
-  updatedAt: string
-  createdAt: string
-  _status?: ('draft' | 'published') | null
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: number
+  id: number;
   /**
    * Describe the image for screen readers and search engines.
    */
-  alt: string
-  caption?: string | null
-  updatedAt: string
-  createdAt: string
-  url?: string | null
-  thumbnailURL?: string | null
-  filename?: string | null
-  mimeType?: string | null
-  filesize?: number | null
-  width?: number | null
-  height?: number | null
-  focalX?: number | null
-  focalY?: number | null
+  alt: string;
+  caption?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
   sizes?: {
     thumbnail?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     card?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     wide?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     og?: {
-      url?: string | null
-      width?: number | null
-      height?: number | null
-      mimeType?: string | null
-      filesize?: number | null
-      filename?: string | null
-    }
-  }
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-studies".
  */
 export interface CaseStudy {
-  id: number
-  title: string
-  client: number | Client
-  services: (number | Service)[]
-  industry?: string | null
-  excerpt?: string | null
+  id: number;
+  title: string;
+  client: number | Client;
+  services: (number | Service)[];
+  industry?: string | null;
+  excerpt?: string | null;
   /**
    * The number shown on cards, e.g. "+71.2%" and "unbranded organic traffic".
    */
   headline?: {
-    value?: string | null
-    label?: string | null
-  }
+    value?: string | null;
+    label?: string | null;
+  };
   challenge?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   whatWeDid?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Percentages only. No revenue, budgets, visit counts or other absolute client figures.
    */
   results?:
     | {
-        value: string
-        label: string
-        id?: string | null
+        value: string;
+        label: string;
+        id?: string | null;
       }[]
-    | null
+    | null;
   /**
    * e.g. "H2 2023 vs H2 2022"
    */
-  resultsPeriod?: string | null
-  heroImage?: (number | null) | Media
-  gallery?: (number | Media)[] | null
-  videoUrl?: string | null
+  resultsPeriod?: string | null;
+  heroImage?: (number | null) | Media;
+  gallery?: (number | Media)[] | null;
+  videoUrl?: string | null;
   /**
    * Used in the URL. Leave empty to generate from the title.
    */
-  slug: string
-  award?: (number | null) | Award
-  sharedCredit?: boolean | null
-  featured?: boolean | null
-  clientApproved?: boolean | null
-  order?: number | null
+  slug: string;
+  award?: (number | null) | Award;
+  sharedCredit?: boolean | null;
+  featured?: boolean | null;
+  clientApproved?: boolean | null;
+  order?: number | null;
   meta?: {
-    title?: string | null
-    description?: string | null
+    title?: string | null;
+    description?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (number | null) | Media
-  }
-  updatedAt: string
-  createdAt: string
-  _status?: ('draft' | 'published') | null
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clients".
  */
 export interface Client {
-  id: number
-  name: string
-  logo?: (number | null) | Media
-  industry?: string | null
-  url?: string | null
-  showLogo?: boolean | null
-  order?: number | null
+  id: number;
+  name: string;
+  logo?: (number | null) | Media;
+  industry?: string | null;
+  url?: string | null;
+  showLogo?: boolean | null;
+  order?: number | null;
   /**
    * Internal only, e.g. "need a higher-resolution logo".
    */
-  notes?: string | null
-  updatedAt: string
-  createdAt: string
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
-  id: number
-  title: string
+  id: number;
+  title: string;
   /**
    * Short label shown on the block in the homepage game, e.g. "SEO/GEO".
    */
-  gameLabel?: string | null
+  gameLabel?: string | null;
   /**
    * Pixel icon on this service’s buoy in the homepage game.
    */
-  gameIcon?: ('analytics' | 'seo' | 'creative' | 'video' | 'web' | 'social' | 'media') | null
-  summary: string
+  gameIcon?: ('analytics' | 'seo' | 'creative' | 'video' | 'web' | 'social' | 'media') | null;
+  summary: string;
   /**
    * One concrete line: how data shapes this craft. Shown in the services matrix.
    */
-  dataLayer?: string | null
+  dataLayer?: string | null;
   /**
    * One concrete line: how this craft is built to be found on Google and in AI answers.
    */
-  searchLayer?: string | null
+  searchLayer?: string | null;
   items?:
     | {
-        item: string
-        id?: string | null
+        item: string;
+        id?: string | null;
       }[]
-    | null
+    | null;
   body?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Shown on the service page and output as FAQ structured data.
    */
   faqs?:
     | {
-        question: string
-        answer: string
-        id?: string | null
+        question: string;
+        answer: string;
+        id?: string | null;
       }[]
-    | null
+    | null;
   /**
    * Used in the URL. Leave empty to generate from the title.
    */
-  slug: string
+  slug: string;
   /**
    * Data Analytics and SEO/GEO are layers that run through everything we make; the rest are crafts.
    */
-  role: 'craft' | 'data' | 'search'
-  order?: number | null
+  role: 'craft' | 'data' | 'search';
+  order?: number | null;
   meta?: {
-    title?: string | null
-    description?: string | null
+    title?: string | null;
+    description?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (number | null) | Media
-  }
-  updatedAt: string
-  createdAt: string
-  _status?: ('draft' | 'published') | null
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "awards".
  */
 export interface Award {
-  id: number
-  show: 'mea' | 'markies' | 'webby' | 'other'
+  id: number;
+  show: 'mea' | 'markies' | 'webby' | 'other';
   /**
    * Name of the awards show.
    */
-  showName?: string | null
-  category: string
-  result: 'winner' | 'finalist' | 'peoples-voice'
+  showName?: string | null;
+  category: string;
+  result: 'winner' | 'finalist' | 'peoples-voice';
   /**
    * Never list Integrated-only awards. Joint wins show "with Fishermen Integrated".
    */
-  credit: 'analytics' | 'joint'
-  caseStudy?: (number | null) | CaseStudy
-  order?: number | null
-  client?: (number | null) | Client
-  year?: number | null
+  credit: 'analytics' | 'joint';
+  caseStudy?: (number | null) | CaseStudy;
+  order?: number | null;
+  client?: (number | null) | Client;
+  year?: number | null;
   /**
    * e.g. Gold, Silver
    */
-  level?: string | null
-  updatedAt: string
-  createdAt: string
+  level?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms".
  */
 export interface Form {
-  id: number
-  title: string
+  id: number;
+  title: string;
   fields?:
     | (
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            required?: boolean | null
-            defaultValue?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'checkbox'
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
           }
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            required?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'email'
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
           }
         | {
             message?: {
               root: {
-                type: string
+                type: string;
                 children: {
-                  type: any
-                  version: number
-                  [k: string]: unknown
-                }[]
-                direction: ('ltr' | 'rtl') | null
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-                indent: number
-                version: number
-              }
-              [k: string]: unknown
-            } | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'message'
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
           }
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            defaultValue?: number | null
-            required?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'number'
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
           }
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            defaultValue?: string | null
-            placeholder?: string | null
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
             options?:
               | {
-                  label: string
-                  value: string
-                  id?: string | null
+                  label: string;
+                  value: string;
+                  id?: string | null;
                 }[]
-              | null
-            required?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'select'
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
           }
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            defaultValue?: string | null
-            required?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'text'
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
           }
         | {
-            name: string
-            label?: string | null
-            width?: number | null
-            defaultValue?: string | null
-            required?: boolean | null
-            id?: string | null
-            blockName?: string | null
-            blockType: 'textarea'
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
           }
       )[]
-    | null
-  submitButtonLabel?: string | null
-  confirmationType?: ('message' | 'redirect') | null
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
   confirmationMessage?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   redirect?: {
-    url: string
-  }
+    url: string;
+  };
   emails?:
     | {
-        emailTo?: string | null
-        cc?: string | null
-        bcc?: string | null
-        replyTo?: string | null
-        emailFrom?: string | null
-        subject: string
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
         message?: {
           root: {
-            type: string
+            type: string;
             children: {
-              type: any
-              version: number
-              [k: string]: unknown
-            }[]
-            direction: ('ltr' | 'rtl') | null
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-            indent: number
-            version: number
-          }
-          [k: string]: unknown
-        } | null
-        id?: string | null
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
       }[]
-    | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "insights".
  */
 export interface Insight {
-  id: number
-  title: string
-  excerpt?: string | null
-  heroImage?: (number | null) | Media
+  id: number;
+  title: string;
+  excerpt?: string | null;
+  heroImage?: (number | null) | Media;
   content: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  }
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   /**
    * Output as FAQ structured data. Write direct, quotable answers.
    */
   faqs?:
     | {
-        question: string
-        answer: string
-        id?: string | null
+        question: string;
+        answer: string;
+        id?: string | null;
       }[]
-    | null
+    | null;
   /**
    * Used in the URL. Leave empty to generate from the title.
    */
-  slug: string
-  author?: (number | null) | Team
-  category?: ('seo-geo' | 'data' | 'social' | 'web' | 'news') | null
-  relatedServices?: (number | Service)[] | null
-  publishedAt?: string | null
+  slug: string;
+  author?: (number | null) | Team;
+  category?: ('seo-geo' | 'data' | 'social' | 'web' | 'news') | null;
+  relatedServices?: (number | Service)[] | null;
+  publishedAt?: string | null;
   meta?: {
-    title?: string | null
-    description?: string | null
+    title?: string | null;
+    description?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (number | null) | Media
-  }
-  updatedAt: string
-  createdAt: string
-  _status?: ('draft' | 'published') | null
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team".
  */
 export interface Team {
-  id: number
-  name: string
-  jobTitle: string
-  photo?: (number | null) | Media
+  id: number;
+  name: string;
+  jobTitle: string;
+  photo?: (number | null) | Media;
   bio?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
-  linkedin?: string | null
-  showOnAbout?: boolean | null
-  order?: number | null
-  updatedAt: string
-  createdAt: string
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  linkedin?: string | null;
+  showOnAbout?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "jobs".
  */
 export interface Job {
-  id: number
-  title: string
-  summary?: string | null
+  id: number;
+  title: string;
+  summary?: string | null;
   description?: {
     root: {
-      type: string
+      type: string;
       children: {
-        type: any
-        version: number
-        [k: string]: unknown
-      }[]
-      direction: ('ltr' | 'rtl') | null
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-      indent: number
-      version: number
-    }
-    [k: string]: unknown
-  } | null
-  applyUrl?: string | null
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  applyUrl?: string | null;
   /**
    * Used in the URL. Leave empty to generate from the title.
    */
-  slug: string
-  employmentType?: ('FULL_TIME' | 'PART_TIME' | 'CONTRACTOR' | 'INTERN') | null
-  location?: string | null
-  open?: boolean | null
-  closingDate?: string | null
+  slug: string;
+  employmentType?: ('FULL_TIME' | 'PART_TIME' | 'CONTRACTOR' | 'INTERN') | null;
+  location?: string | null;
+  open?: boolean | null;
+  closingDate?: string | null;
   meta?: {
-    title?: string | null
-    description?: string | null
+    title?: string | null;
+    description?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (number | null) | Media
-  }
-  updatedAt: string
-  createdAt: string
-  _status?: ('draft' | 'published') | null
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number
-  name: string
+  id: number;
+  name: string;
   /**
    * The first account is always created as an Admin.
    */
-  role: 'editor' | 'publisher' | 'admin'
-  updatedAt: string
-  createdAt: string
-  email: string
-  resetPasswordToken?: string | null
-  resetPasswordExpiration?: string | null
-  salt?: string | null
-  hash?: string | null
-  resetPasswordRequestedAt?: string | null
-  loginAttempts?: number | null
-  lockUntil?: string | null
+  role: 'editor' | 'publisher' | 'admin';
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
   sessions?:
     | {
-        id: string
-        createdAt?: string | null
-        expiresAt: string
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
       }[]
-    | null
-  password?: string | null
-  collection: 'users'
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: number
-  from: string
+  id: number;
+  from: string;
   to?: {
-    type?: ('reference' | 'custom') | null
+    type?: ('reference' | 'custom') | null;
     reference?:
       | ({
-          relationTo: 'pages'
-          value: number | Page
+          relationTo: 'pages';
+          value: number | Page;
         } | null)
       | ({
-          relationTo: 'services'
-          value: number | Service
+          relationTo: 'services';
+          value: number | Service;
         } | null)
       | ({
-          relationTo: 'case-studies'
-          value: number | CaseStudy
+          relationTo: 'case-studies';
+          value: number | CaseStudy;
         } | null)
       | ({
-          relationTo: 'insights'
-          value: number | Insight
-        } | null)
-    url?: string | null
-  }
-  updatedAt: string
-  createdAt: string
+          relationTo: 'insights';
+          value: number | Insight;
+        } | null);
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: number
-  form: number | Form
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
-        field: string
-        value: string
-        id?: string | null
+        field: string;
+        value: string;
+        id?: string | null;
       }[]
-    | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number
-  key: string
+  id: number;
+  key: string;
   data:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: number
+  id: number;
   /**
    * Input data provided to the job
    */
   input?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
+    | null;
   taskStatus?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
-  completedAt?: string | null
-  totalTried?: number | null
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
   /**
    * If hasError is true this job will not be retried
    */
-  hasError?: boolean | null
+  hasError?: boolean | null;
   /**
    * If hasError is true, this is the error that caused it
    */
   error?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
+    | null;
   /**
    * Task execution log
    */
   log?:
     | {
-        executedAt: string
-        completedAt: string
-        taskSlug: 'inline' | 'schedulePublish'
-        taskID: string
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
         input?:
           | {
-              [k: string]: unknown
+              [k: string]: unknown;
             }
           | unknown[]
           | string
           | number
           | boolean
-          | null
+          | null;
         output?:
           | {
-              [k: string]: unknown
+              [k: string]: unknown;
             }
           | unknown[]
           | string
           | number
           | boolean
-          | null
-        state: 'failed' | 'succeeded'
+          | null;
+        state: 'failed' | 'succeeded';
         error?:
           | {
-              [k: string]: unknown
+              [k: string]: unknown;
             }
           | unknown[]
           | string
           | number
           | boolean
-          | null
-        id?: string | null
+          | null;
+        id?: string | null;
       }[]
-    | null
-  taskSlug?: ('inline' | 'schedulePublish') | null
-  queue?: string | null
-  waitUntil?: string | null
-  processing?: boolean | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number
+  id: number;
   document?:
     | ({
-        relationTo: 'pages'
-        value: number | Page
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
-        relationTo: 'services'
-        value: number | Service
+        relationTo: 'services';
+        value: number | Service;
       } | null)
     | ({
-        relationTo: 'case-studies'
-        value: number | CaseStudy
+        relationTo: 'case-studies';
+        value: number | CaseStudy;
       } | null)
     | ({
-        relationTo: 'awards'
-        value: number | Award
+        relationTo: 'awards';
+        value: number | Award;
       } | null)
     | ({
-        relationTo: 'insights'
-        value: number | Insight
+        relationTo: 'insights';
+        value: number | Insight;
       } | null)
     | ({
-        relationTo: 'team'
-        value: number | Team
+        relationTo: 'team';
+        value: number | Team;
       } | null)
     | ({
-        relationTo: 'clients'
-        value: number | Client
+        relationTo: 'clients';
+        value: number | Client;
       } | null)
     | ({
-        relationTo: 'jobs'
-        value: number | Job
+        relationTo: 'jobs';
+        value: number | Job;
       } | null)
     | ({
-        relationTo: 'media'
-        value: number | Media
+        relationTo: 'media';
+        value: number | Media;
       } | null)
     | ({
-        relationTo: 'users'
-        value: number | User
+        relationTo: 'users';
+        value: number | User;
       } | null)
     | ({
-        relationTo: 'redirects'
-        value: number | Redirect
+        relationTo: 'redirects';
+        value: number | Redirect;
       } | null)
     | ({
-        relationTo: 'forms'
-        value: number | Form
+        relationTo: 'forms';
+        value: number | Form;
       } | null)
     | ({
-        relationTo: 'form-submissions'
-        value: number | FormSubmission
-      } | null)
-  globalSlug?: string | null
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
+      } | null);
+  globalSlug?: string | null;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  updatedAt: string
-  createdAt: string
+    relationTo: 'users';
+    value: number | User;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number
+  id: number;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  key?: string | null
+    relationTo: 'users';
+    value: number | User;
+  };
+  key?: string | null;
   value?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number
-  name?: string | null
-  batch?: number | null
-  updatedAt: string
-  createdAt: string
+  id: number;
+  name?: string | null;
+  batch?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
-  title?: T
+  title?: T;
   layout?:
     | T
     | {
         hero?:
           | T
           | {
-              brandingArea?: T
-              eyebrow?: T
-              heading?: T
-              intro?: T
+              brandingArea?: T;
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
               links?:
                 | T
                 | {
-                    label?: T
-                    href?: T
-                    id?: T
-                  }
-              image?: T
-              id?: T
-              blockName?: T
-            }
+                    label?: T;
+                    href?: T;
+                    id?: T;
+                  };
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
         richText?:
           | T
           | {
-              content?: T
-              id?: T
-              blockName?: T
-            }
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
         services?:
           | T
           | {
-              heading?: T
-              intro?: T
-              showGame?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              intro?: T;
+              showGame?: T;
+              id?: T;
+              blockName?: T;
+            };
         featuredWork?:
           | T
           | {
-              heading?: T
-              caseStudies?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              caseStudies?: T;
+              id?: T;
+              blockName?: T;
+            };
         method?:
           | T
           | {
-              heading?: T
+              heading?: T;
               steps?:
                 | T
                 | {
-                    title?: T
-                    text?: T
-                    id?: T
-                  }
-              id?: T
-              blockName?: T
-            }
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         awards?:
           | T
           | {
-              heading?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              id?: T;
+              blockName?: T;
+            };
         clientLogos?:
           | T
           | {
-              heading?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              id?: T;
+              blockName?: T;
+            };
         family?:
           | T
           | {
-              heading?: T
-              text?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
         faq?:
           | T
           | {
-              heading?: T
+              heading?: T;
               items?:
                 | T
                 | {
-                    question?: T
-                    answer?: T
-                    id?: T
-                  }
-              id?: T
-              blockName?: T
-            }
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         cta?:
           | T
           | {
-              heading?: T
-              text?: T
-              label?: T
-              href?: T
-              id?: T
-              blockName?: T
-            }
+              heading?: T;
+              text?: T;
+              label?: T;
+              href?: T;
+              id?: T;
+              blockName?: T;
+            };
         enquiryForm?:
           | T
           | {
-              heading?: T
-              intro?: T
-              form?: T
-              id?: T
-              blockName?: T
-            }
-      }
-  slug?: T
+              heading?: T;
+              intro?: T;
+              form?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  slug?: T;
   meta?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  _status?: T
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
-  title?: T
-  gameLabel?: T
-  gameIcon?: T
-  summary?: T
-  dataLayer?: T
-  searchLayer?: T
+  title?: T;
+  gameLabel?: T;
+  gameIcon?: T;
+  summary?: T;
+  dataLayer?: T;
+  searchLayer?: T;
   items?:
     | T
     | {
-        item?: T
-        id?: T
-      }
-  body?: T
+        item?: T;
+        id?: T;
+      };
+  body?: T;
   faqs?:
     | T
     | {
-        question?: T
-        answer?: T
-        id?: T
-      }
-  slug?: T
-  role?: T
-  order?: T
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  slug?: T;
+  role?: T;
+  order?: T;
   meta?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  _status?: T
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "case-studies_select".
  */
 export interface CaseStudiesSelect<T extends boolean = true> {
-  title?: T
-  client?: T
-  services?: T
-  industry?: T
-  excerpt?: T
+  title?: T;
+  client?: T;
+  services?: T;
+  industry?: T;
+  excerpt?: T;
   headline?:
     | T
     | {
-        value?: T
-        label?: T
-      }
-  challenge?: T
-  whatWeDid?: T
+        value?: T;
+        label?: T;
+      };
+  challenge?: T;
+  whatWeDid?: T;
   results?:
     | T
     | {
-        value?: T
-        label?: T
-        id?: T
-      }
-  resultsPeriod?: T
-  heroImage?: T
-  gallery?: T
-  videoUrl?: T
-  slug?: T
-  award?: T
-  sharedCredit?: T
-  featured?: T
-  clientApproved?: T
-  order?: T
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  resultsPeriod?: T;
+  heroImage?: T;
+  gallery?: T;
+  videoUrl?: T;
+  slug?: T;
+  award?: T;
+  sharedCredit?: T;
+  featured?: T;
+  clientApproved?: T;
+  order?: T;
   meta?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  _status?: T
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "awards_select".
  */
 export interface AwardsSelect<T extends boolean = true> {
-  show?: T
-  showName?: T
-  category?: T
-  result?: T
-  credit?: T
-  caseStudy?: T
-  order?: T
-  client?: T
-  year?: T
-  level?: T
-  updatedAt?: T
-  createdAt?: T
+  show?: T;
+  showName?: T;
+  category?: T;
+  result?: T;
+  credit?: T;
+  caseStudy?: T;
+  order?: T;
+  client?: T;
+  year?: T;
+  level?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "insights_select".
  */
 export interface InsightsSelect<T extends boolean = true> {
-  title?: T
-  excerpt?: T
-  heroImage?: T
-  content?: T
+  title?: T;
+  excerpt?: T;
+  heroImage?: T;
+  content?: T;
   faqs?:
     | T
     | {
-        question?: T
-        answer?: T
-        id?: T
-      }
-  slug?: T
-  author?: T
-  category?: T
-  relatedServices?: T
-  publishedAt?: T
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  slug?: T;
+  author?: T;
+  category?: T;
+  relatedServices?: T;
+  publishedAt?: T;
   meta?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  _status?: T
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team_select".
  */
 export interface TeamSelect<T extends boolean = true> {
-  name?: T
-  jobTitle?: T
-  photo?: T
-  bio?: T
-  linkedin?: T
-  showOnAbout?: T
-  order?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  jobTitle?: T;
+  photo?: T;
+  bio?: T;
+  linkedin?: T;
+  showOnAbout?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "clients_select".
  */
 export interface ClientsSelect<T extends boolean = true> {
-  name?: T
-  logo?: T
-  industry?: T
-  url?: T
-  showLogo?: T
-  order?: T
-  notes?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  logo?: T;
+  industry?: T;
+  url?: T;
+  showLogo?: T;
+  order?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "jobs_select".
  */
 export interface JobsSelect<T extends boolean = true> {
-  title?: T
-  summary?: T
-  description?: T
-  applyUrl?: T
-  slug?: T
-  employmentType?: T
-  location?: T
-  open?: T
-  closingDate?: T
+  title?: T;
+  summary?: T;
+  description?: T;
+  applyUrl?: T;
+  slug?: T;
+  employmentType?: T;
+  location?: T;
+  open?: T;
+  closingDate?: T;
   meta?:
     | T
     | {
-        title?: T
-        description?: T
-        image?: T
-      }
-  updatedAt?: T
-  createdAt?: T
-  _status?: T
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T
-  caption?: T
-  updatedAt?: T
-  createdAt?: T
-  url?: T
-  thumbnailURL?: T
-  filename?: T
-  mimeType?: T
-  filesize?: T
-  width?: T
-  height?: T
-  focalX?: T
-  focalY?: T
+  alt?: T;
+  caption?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
   sizes?:
     | T
     | {
         thumbnail?:
           | T
           | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
         card?:
           | T
           | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
         wide?:
           | T
           | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
         og?:
           | T
           | {
-              url?: T
-              width?: T
-              height?: T
-              mimeType?: T
-              filesize?: T
-              filename?: T
-            }
-      }
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  name?: T
-  role?: T
-  updatedAt?: T
-  createdAt?: T
-  email?: T
-  resetPasswordToken?: T
-  resetPasswordExpiration?: T
-  salt?: T
-  hash?: T
-  resetPasswordRequestedAt?: T
-  loginAttempts?: T
-  lockUntil?: T
+  name?: T;
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
   sessions?:
     | T
     | {
-        id?: T
-        createdAt?: T
-        expiresAt?: T
-      }
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
-  from?: T
+  from?: T;
   to?:
     | T
     | {
-        type?: T
-        reference?: T
-        url?: T
-      }
-  updatedAt?: T
-  createdAt?: T
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
-  title?: T
+  title?: T;
   fields?:
     | T
     | {
         checkbox?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              required?: T
-              defaultValue?: T
-              id?: T
-              blockName?: T
-            }
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              id?: T;
+              blockName?: T;
+            };
         email?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              required?: T
-              id?: T
-              blockName?: T
-            }
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
         message?:
           | T
           | {
-              message?: T
-              id?: T
-              blockName?: T
-            }
+              message?: T;
+              id?: T;
+              blockName?: T;
+            };
         number?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              defaultValue?: T
-              required?: T
-              id?: T
-              blockName?: T
-            }
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
         select?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              defaultValue?: T
-              placeholder?: T
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              placeholder?: T;
               options?:
                 | T
                 | {
-                    label?: T
-                    value?: T
-                    id?: T
-                  }
-              required?: T
-              id?: T
-              blockName?: T
-            }
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
         text?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              defaultValue?: T
-              required?: T
-              id?: T
-              blockName?: T
-            }
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
         textarea?:
           | T
           | {
-              name?: T
-              label?: T
-              width?: T
-              defaultValue?: T
-              required?: T
-              id?: T
-              blockName?: T
-            }
-      }
-  submitButtonLabel?: T
-  confirmationType?: T
-  confirmationMessage?: T
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  submitButtonLabel?: T;
+  confirmationType?: T;
+  confirmationMessage?: T;
   redirect?:
     | T
     | {
-        url?: T
-      }
+        url?: T;
+      };
   emails?:
     | T
     | {
-        emailTo?: T
-        cc?: T
-        bcc?: T
-        replyTo?: T
-        emailFrom?: T
-        subject?: T
-        message?: T
-        id?: T
-      }
-  updatedAt?: T
-  createdAt?: T
+        emailTo?: T;
+        cc?: T;
+        bcc?: T;
+        replyTo?: T;
+        emailFrom?: T;
+        subject?: T;
+        message?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions_select".
  */
 export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T
+  form?: T;
   submissionData?:
     | T
     | {
-        field?: T
-        value?: T
-        id?: T
-      }
-  updatedAt?: T
-  createdAt?: T
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T
-  data?: T
+  key?: T;
+  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs_select".
  */
 export interface PayloadJobsSelect<T extends boolean = true> {
-  input?: T
-  taskStatus?: T
-  completedAt?: T
-  totalTried?: T
-  hasError?: T
-  error?: T
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
   log?:
     | T
     | {
-        executedAt?: T
-        completedAt?: T
-        taskSlug?: T
-        taskID?: T
-        input?: T
-        output?: T
-        state?: T
-        error?: T
-        id?: T
-      }
-  taskSlug?: T
-  queue?: T
-  waitUntil?: T
-  processing?: T
-  updatedAt?: T
-  createdAt?: T
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T
-  globalSlug?: T
-  user?: T
-  updatedAt?: T
-  createdAt?: T
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T
-  key?: T
-  value?: T
-  updatedAt?: T
-  createdAt?: T
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T
-  batch?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
-  id: number
-  companyName: string
-  legalName?: string | null
-  foundingYear?: number | null
-  tagline?: string | null
+  id: number;
+  companyName: string;
+  legalName?: string | null;
+  foundingYear?: number | null;
+  tagline?: string | null;
   /**
    * One or two sentences used in structured data and llms.txt.
    */
-  description?: string | null
-  logo?: (number | null) | Media
+  description?: string | null;
+  logo?: (number | null) | Media;
   address?: {
-    street?: string | null
-    postcode?: string | null
-    city?: string | null
-    state?: string | null
-    country?: string | null
-    confirmed?: boolean | null
-  }
-  email?: string | null
-  phone?: string | null
+    street?: string | null;
+    postcode?: string | null;
+    city?: string | null;
+    state?: string | null;
+    country?: string | null;
+    confirmed?: boolean | null;
+  };
+  email?: string | null;
+  phone?: string | null;
   /**
    * Shown by the enquiry form, e.g. "We reply within one working day."
    */
-  replyTime?: string | null
+  replyTime?: string | null;
   /**
    * Who receives enquiry form emails.
    */
   enquiryRecipients?:
     | {
-        email: string
-        id?: string | null
+        email: string;
+        id?: string | null;
       }[]
-    | null
-  fishermenIntegratedUrl?: string | null
+    | null;
+  fishermenIntegratedUrl?: string | null;
   socials?:
     | {
-        platform: 'linkedin' | 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'x'
-        url: string
-        id?: string | null
+        platform: 'linkedin' | 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'x';
+        url: string;
+        id?: string | null;
       }[]
-    | null
+    | null;
   /**
    * e.g. G-XXXXXXXXXX
    */
-  ga4MeasurementId?: string | null
-  searchConsoleVerification?: string | null
-  updatedAt?: string | null
-  createdAt?: string | null
+  ga4MeasurementId?: string | null;
+  searchConsoleVerification?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
-  companyName?: T
-  legalName?: T
-  foundingYear?: T
-  tagline?: T
-  description?: T
-  logo?: T
+  companyName?: T;
+  legalName?: T;
+  foundingYear?: T;
+  tagline?: T;
+  description?: T;
+  logo?: T;
   address?:
     | T
     | {
-        street?: T
-        postcode?: T
-        city?: T
-        state?: T
-        country?: T
-        confirmed?: T
-      }
-  email?: T
-  phone?: T
-  replyTime?: T
+        street?: T;
+        postcode?: T;
+        city?: T;
+        state?: T;
+        country?: T;
+        confirmed?: T;
+      };
+  email?: T;
+  phone?: T;
+  replyTime?: T;
   enquiryRecipients?:
     | T
     | {
-        email?: T
-        id?: T
-      }
-  fishermenIntegratedUrl?: T
+        email?: T;
+        id?: T;
+      };
+  fishermenIntegratedUrl?: T;
   socials?:
     | T
     | {
-        platform?: T
-        url?: T
-        id?: T
-      }
-  ga4MeasurementId?: T
-  searchConsoleVerification?: T
-  updatedAt?: T
-  createdAt?: T
-  globalType?: T
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  ga4MeasurementId?: T;
+  searchConsoleVerification?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1863,9 +1862,9 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  */
 export interface CollectionsWidget {
   data?: {
-    [k: string]: unknown
-  }
-  width: 'full'
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1873,44 +1872,45 @@ export interface CollectionsWidget {
  */
 export interface TaskSchedulePublish {
   input: {
-    type?: ('publish' | 'unpublish') | null
-    locale?: string | null
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
     doc?:
       | ({
-          relationTo: 'pages'
-          value: number | Page
+          relationTo: 'pages';
+          value: number | Page;
         } | null)
       | ({
-          relationTo: 'services'
-          value: number | Service
+          relationTo: 'services';
+          value: number | Service;
         } | null)
       | ({
-          relationTo: 'case-studies'
-          value: number | CaseStudy
+          relationTo: 'case-studies';
+          value: number | CaseStudy;
         } | null)
       | ({
-          relationTo: 'insights'
-          value: number | Insight
+          relationTo: 'insights';
+          value: number | Insight;
         } | null)
       | ({
-          relationTo: 'jobs'
-          value: number | Job
-        } | null)
-    global?: string | null
+          relationTo: 'jobs';
+          value: number | Job;
+        } | null);
+    global?: string | null;
     user?: {
-      relationTo: 'users'
-      value: number | User
-    } | null
-  }
-  output?: unknown
+      relationTo: 'users';
+      value: number | User;
+    } | null;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown
+  [k: string]: unknown;
 }
+
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}

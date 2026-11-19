@@ -1,5 +1,6 @@
 /**
- * Loads the agreed website content into the CMS (English only; BM is drafted after sign-off).
+ * Loads the agreed website content into the CMS in English. Then run `npm run seed:ms` for the
+ * Bahasa Malaysia draft (rerun it after this script, which recreates shared block and result rows).
  *
  *   npm run seed     (with the database running: npm run db, or npm run dev:local in another terminal)
  *

@@ -45,7 +45,7 @@ This brief carries over decisions made while planning in Claude chat. Treat them
 
 - **Case study results as percentages only.** No revenue, budgets, visit counts or other absolute client figures.
 - **Awards:** shown as past wins ("Winner, Marketing Excellence Awards"), with **no level, no year and no client name**.
-- **Bahasa Malaysia:** Claude drafts the BM copy after the English is signed off; the team edits it.
+- **Bahasa Malaysia:** Claude drafts the BM copy after the English is signed off; the team edits it. BM draft loaded 19 Nov 2026 (source: `scripts/content/ms.ts` in the repo, `npm run seed:ms`; review table: `content/bm-draft-review.md` in the OneDrive brief folder). Brand, campaign and award category names stay in English.
 - The **homepage does most of the work**: positioning, all seven services, three featured case studies with numbers, awards, client logos, Fishermen Integrated link, enquiry form. Users should not need to navigate much.
 
 ## Sitemap
