@@ -38,8 +38,8 @@ export const dictionary = {
     sonarAria: 'Sonar display showing featured results',
     game: {
       kicker: 'Services game · 30 seconds',
-      titleLead: 'Shoot the service we can ',
-      titleHighlight: 'help you with',
+      titleLead: 'Cast for ',
+      titleHighlight: 'Our Services',
       play: 'Play',
       loading: 'Loading the game…',
       wonTitle: 'You caught all seven.',
@@ -111,8 +111,8 @@ export const dictionary = {
     sonarAria: 'Paparan sonar menunjukkan hasil pilihan',
     game: {
       kicker: 'Permainan perkhidmatan · 30 saat',
-      titleLead: 'Tembak perkhidmatan yang ',
-      titleHighlight: 'boleh kami bantu',
+      titleLead: 'Pancing ',
+      titleHighlight: 'Perkhidmatan Kami',
       play: 'Main',
       loading: 'Memuatkan permainan…',
       wonTitle: 'Anda menangkap ketujuh-tujuhnya.',
