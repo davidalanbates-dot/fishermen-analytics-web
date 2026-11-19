@@ -67,6 +67,7 @@ Pages, services, case studies, insights and jobs have drafts, scheduled publishi
 
 ## Accounts
 
-Fishermen Analytics owns every account (domain, Vercel, database, Blob, Resend, GitHub, GA4,
+The code lives in a private repo on David's personal GitHub (davidalanbates-dot).
+Fishermen Analytics owns every other account (domain, Vercel, database, Blob, Resend, GA4,
 Search Console). The team creates them and enters credentials in Vercel environment variables;
 see `.env.example` for the list.

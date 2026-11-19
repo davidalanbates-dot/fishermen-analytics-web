@@ -90,7 +90,8 @@ Marketing Excellence Awards: Search Engine Marketing Â· Relationship Marketing Â
 - **PostgreSQL** (e.g. Neon or Supabase), media in cloud storage (e.g. Vercel Blob or Cloudflare R2), hosted on **Vercel**, domain fishermen-analytics.com.
 - Forms: Payload form submissions plus an email service (e.g. Resend).
 - GA4 and Google Search Console from launch. Not WordPress.
-- Fishermen Analytics owns all accounts (domain, hosting, database, GitHub). The team creates accounts and enters credentials themselves.
+- Fishermen Analytics owns all accounts (domain, hosting, database). The team creates accounts and enters credentials themselves.
+- Code repository: private repo on David's personal GitHub, github.com/davidalanbates-dot/fishermen-analytics-web (user's choice, Nov 2026; can be transferred to a company organisation later).
 
 ### CMS collections
 
