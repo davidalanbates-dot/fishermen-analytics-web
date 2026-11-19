@@ -23,6 +23,7 @@ This brief carries over decisions made while planning in Claude chat. Treat them
 
 - Full plan (living document): https://claude.ai/artifact/CjurShnTteW7NdjkKjjiy7 (main tab: plan; second tab: case study copy)
 - Clickable preview of structure and content: https://claude.ai/artifact/Q5sp48neGhJeFMsUpWqt82
+- Go-live checklist (accounts, Vercel variables, DNS, launch checks): https://claude.ai/artifact/X1L9VxVFLQYwnr53tNjLfW
 - Preview source: `preview/index.html` (single-file HTML, hash routing). Use it as the content and structure reference, not as production code.
 
 ## The company
@@ -126,4 +127,5 @@ The site is the agency's own SEO/GEO showcase: Core Web Vitals pass on mobile; s
 - Email address, phone number, reply time for the enquiry form; confirm office address.
 - Team photos and bios.
 - Whether fishermen.co will link to fishermen-analytics.com.
+- Before launch (code): email enquiries to Site settings › Enquiry recipients (not wired yet); refresh pages on publish (now up to 60 s).
 - Mobile Core Web Vitals check: run PageSpeed Insights on the live domain after launch (not run locally).
