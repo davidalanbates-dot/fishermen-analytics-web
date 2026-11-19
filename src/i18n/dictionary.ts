@@ -49,9 +49,9 @@ export const dictionary = {
       playAgain: 'Play again',
       more: 'More',
       canvasLabel:
-        'Services game: steer the boat with the arrow keys or your mouse, and cast with Space or a click to catch each service block. Press Escape to stop.',
+        'Services game: steer the boat with the arrow keys or your mouse, and fire with Space or a click to catch each service block. Shots follow the tilt of the waves. Press Escape to stop.',
       seconds: 's',
-      help: 'Arrow keys or mouse to steer · Space or click to cast',
+      help: 'Arrow keys or mouse to steer · Space or click to fire · Time your shots to the waves',
       skip: 'Skip the game',
       caught: 'Caught',
     },
@@ -120,9 +120,9 @@ export const dictionary = {
       playAgain: 'Main lagi',
       more: 'Lagi',
       canvasLabel:
-        'Permainan perkhidmatan: kemudi bot dengan kekunci anak panah atau tetikus, dan lontar dengan Space atau klik untuk menangkap setiap blok perkhidmatan. Tekan Escape untuk berhenti.',
+        'Permainan perkhidmatan: kemudi bot dengan kekunci anak panah atau tetikus, dan tembak dengan Space atau klik untuk menangkap setiap blok perkhidmatan. Tembakan mengikut kecondongan ombak. Tekan Escape untuk berhenti.',
       seconds: 's',
-      help: 'Kekunci anak panah atau tetikus untuk mengemudi · Space atau klik untuk melontar',
+      help: 'Kekunci anak panah atau tetikus untuk mengemudi · Space atau klik untuk menembak · Tepatkan tembakan dengan ombak',
       skip: 'Langkau permainan',
       caught: 'Ditangkap',
     },

@@ -8,29 +8,51 @@ import type { GameProps, GameService } from './types'
 
 /**
  * "Cast for our services": an original arcade game for the homepage.
- * A boat at the bottom casts hooks up at drifting service blocks. Each catch shows that
- * service; catching all seven within the round ends on a "Let's talk" call to action.
+ *
+ * The boat rides a rolling sea. As the swell lifts and tilts it, its pixel shots fly along
+ * the tilt, so timing a shot to the slope of a wave lets you hit blocks that are not directly
+ * above you. The sea gets rougher with every catch. Each catch shows that service; catching
+ * all seven within the round ends on a "Let's talk" call to action.
+ * (Rolling-wave mechanic inspired by classic boat shooters; the game, art and content are ours.)
  *
  * Loaded only when someone presses Play (see GameLoader), so it adds nothing to page load.
  * Controls: arrow keys + Space/Up, mouse move + click, or touch drag + tap. Escape stops.
- * With reduced motion the blocks stay still and the water does not move.
+ * Reduced motion: a calm sea, a level boat that fires straight up, and blocks that stay still.
  */
 
 const ROUND_SECONDS = 30
-const MAX_HOOKS = 2
-const HOOK_SPEED = 520
+const MAX_SHOTS = 2
+const RELOAD_SECONDS = 0.5 // minimum time between shots, so mashing fire does not win
+const SHOT_SPEED = 560
 const BOAT_SPEED = 360
+const PIXEL = 4 // size of one "pixel" in the shot sprite
+const SWELL_START = 13 // wave height (px) at the start of a round
+const SWELL_PER_CATCH = 2 // added per catch
+const SWELL_MAX = 26
+const MAX_TILT = 0.45 // radians, about 26°
 const COLORS = {
   water: '#04202c',
+  sea: '#063448',
   grid: 'rgba(0, 162, 232, 0.14)',
-  wave: 'rgba(0, 162, 232, 0.55)',
+  crest: '#00A2E8',
   yellow: '#FFF200',
   sky: '#00A2E8',
   ink: '#000000',
-  line: '#f2f5f7',
+  trail: 'rgba(255, 242, 0, 0.45)',
 }
 
-type Block = { s: GameService; x: number; y: number; w: number; h: number; caught: boolean }
+type Block = {
+  s: GameService
+  x: number
+  y: number
+  w: number
+  h: number
+  vx: number
+  phase: number
+  bob: number
+  caught: boolean
+}
+type Shot = { x: number; y: number; vx: number; vy: number }
 type Phase = 'playing' | 'won' | 'lost'
 
 export function ServicesGame({ services, text, contactHref, listId }: GameProps) {
@@ -68,32 +90,61 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
     let H = 0
     let raf = 0
     let last = performance.now()
+    let clock = 0 // seconds since the round started, drives the sea
     let timeLeft = ROUND_SECONDS
     let shownSeconds = ROUND_SECONDS
     let caughtCount = 0
-    let dir = 1
     let catchTimer = 0
+    let reload = 0
     let ended = false
+    let swell = reduceMotion ? 0 : SWELL_START
+    let targetSwell = swell
     const keys: Record<string, boolean> = {}
-    let hooks: { x: number; y: number }[] = []
+    let shots: Shot[] = []
     let blocks: Block[] = []
-    const boat = { x: 0, w: 64 }
+    const boat = { x: 0, y: 0, w: 64, tilt: 0 }
 
+    // ---- The sea ----
+    const seaLevel = () => H - 50
+    /** Height of the sea surface at x: two travelling sine waves make an irregular swell. */
+    const seaY = (x: number) => {
+      if (swell === 0) return seaLevel()
+      const k = (Math.PI * 2) / Math.max(220, W * 0.55)
+      return (
+        seaLevel() +
+        swell * Math.sin(k * x - clock * 1.9) +
+        swell * 0.35 * Math.sin(k * 2.3 * x + clock * 1.3 + 1)
+      )
+    }
+
+    /**
+     * Blocks swim in lanes (3 rows), each at its own speed and direction, so they spread
+     * out and bunch up like fish. Together they cover roughly 60% of the width.
+     */
     function layout() {
       const pad = 14
-      const gap = 10
-      const top = 44
-      const perRow = W < 440 ? 3 : 4
-      const bw = Math.min(150, (W - pad * 2 - gap * (perRow - 1)) / perRow - 8)
-      const bh = 34
-      blocks = services.map((s, i) => ({
-        s,
-        x: pad + (i % perRow) * (bw + gap),
-        y: top + Math.floor(i / perRow) * (bh + gap),
-        w: bw,
-        h: bh,
-        caught: false,
-      }))
+      const top = 46
+      const lanes = 3
+      const bh = 32
+      const perLane = Math.ceil(services.length / lanes)
+      const slot = (W - pad * 2) / perLane
+      const bw = Math.max(78, Math.min(124, slot * 0.6))
+      blocks = services.map((s, i) => {
+        const lane = i % lanes
+        const col = Math.floor(i / lanes)
+        const speed = 45 + ((i * 37) % 40) // 45–85 px/s, varied but repeatable
+        return {
+          s,
+          x: pad + col * slot + (slot - bw) / 2 + (lane % 2) * slot * 0.35,
+          y: top + lane * (bh + 14),
+          w: bw,
+          h: bh,
+          vx: (lane % 2 === 0 ? 1 : -1) * speed,
+          phase: i * 1.3,
+          bob: 0,
+          caught: false,
+        }
+      })
     }
 
     function resize() {
@@ -122,9 +173,26 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
       ctx!.closePath()
     }
 
-    function draw(now: number) {
+    /** The boat sits on the surface and leans with the slope of the wave under it. */
+    function updateBoat(dt: number) {
+      boat.y = seaY(boat.x)
+      const slope = (seaY(boat.x + 8) - seaY(boat.x - 8)) / 16
+      const target = Math.max(-MAX_TILT, Math.min(MAX_TILT, Math.atan(slope)))
+      boat.tilt += (target - boat.tilt) * Math.min(1, dt * 10) // smooth, no jitter
+    }
+
+    /** Where shots leave the gun, in canvas coordinates. */
+    function muzzle() {
+      const len = 30 // from the waterline to the gun tip
+      return {
+        x: boat.x + Math.sin(boat.tilt) * len,
+        y: boat.y - 6 - Math.cos(boat.tilt) * len,
+      }
+    }
+
+    function draw() {
       const c = ctx!
-      // Water and sonar grid
+      // Deep water and sonar grid
       c.fillStyle = COLORS.water
       c.fillRect(0, 0, W, H)
       c.strokeStyle = COLORS.grid
@@ -141,69 +209,86 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
         c.lineTo(x, H)
         c.stroke()
       }
-      // Surface line
-      c.strokeStyle = COLORS.wave
-      c.lineWidth = 2
-      c.beginPath()
-      const y0 = H - 30
-      for (let x = 0; x <= W; x += 8) {
-        const y = y0 + (reduceMotion ? 0 : Math.sin(x / 18 + now / 400) * 3)
-        if (x === 0) c.moveTo(x, y)
-        else c.lineTo(x, y)
-      }
-      c.stroke()
+
       // Blocks
       c.font = `600 ${W < 440 ? 11.5 : 13}px ${fontFamily}`
       c.textAlign = 'center'
       c.textBaseline = 'middle'
       for (const b of blocks) {
         if (b.caught) continue
-        roundRect(b.x, b.y, b.w, b.h, 6)
+        const y = b.y + b.bob
+        roundRect(b.x, y, b.w, b.h, 6)
         c.fillStyle = b.s.core ? COLORS.yellow : COLORS.sky
         c.fill()
         c.fillStyle = COLORS.ink
-        c.fillText(b.s.label, b.x + b.w / 2, b.y + b.h / 2 + 1, b.w - 10)
+        c.fillText(b.s.label, b.x + b.w / 2, y + b.h / 2 + 1, b.w - 10)
       }
-      // Hooks and lines
-      for (const h of hooks) {
-        c.strokeStyle = COLORS.line
-        c.lineWidth = 1.5
-        c.setLineDash([4, 3])
-        c.beginPath()
-        c.moveTo(h.x, H - 52)
-        c.lineTo(h.x, h.y + 16)
-        c.stroke()
-        c.setLineDash([])
-        c.strokeStyle = COLORS.yellow
-        c.lineWidth = 2.5
-        c.beginPath()
-        c.moveTo(h.x, h.y + 16)
-        c.lineTo(h.x, h.y + 4)
-        c.arc(h.x - 5, h.y + 4, 5, 0, Math.PI, true)
-        c.stroke()
+
+      // Pixel shots: a square "pixel" with a two-step trail, snapped to the pixel grid
+      for (const s of shots) {
+        const speed = Math.hypot(s.vx, s.vy) || 1
+        const ux = s.vx / speed
+        const uy = s.vy / speed
+        const px = (x: number) => Math.round(x / 2) * 2
+        c.fillStyle = COLORS.trail
+        c.fillRect(px(s.x - ux * 9 - PIXEL / 4), px(s.y - uy * 9 - PIXEL / 4), PIXEL / 2, PIXEL / 2)
+        c.fillRect(
+          px(s.x - ux * 5 - PIXEL / 2.6),
+          px(s.y - uy * 5 - PIXEL / 2.6),
+          PIXEL * 0.75,
+          PIXEL * 0.75,
+        )
+        c.fillStyle = COLORS.yellow
+        c.fillRect(px(s.x - PIXEL / 2), px(s.y - PIXEL / 2), PIXEL, PIXEL)
       }
-      // Boat
-      const by = H - 36
+
+      // Boat, rotated with the wave
+      c.save()
+      c.translate(boat.x, boat.y)
+      c.rotate(boat.tilt)
       c.fillStyle = COLORS.yellow
       c.beginPath()
-      c.moveTo(boat.x - 32, by - 10)
-      c.lineTo(boat.x + 32, by - 10)
-      c.lineTo(boat.x + 22, by + 6)
-      c.lineTo(boat.x - 22, by + 6)
+      c.moveTo(-32, -10)
+      c.lineTo(32, -10)
+      c.lineTo(22, 6)
+      c.lineTo(-22, 6)
       c.closePath()
       c.fill()
-      c.fillRect(boat.x - 1.5, by - 28, 3, 18)
-      c.strokeStyle = COLORS.yellow
+      c.fillRect(-9, -18, 18, 8) // cabin
+      c.fillRect(-2, -36, 4, 20) // gun
+      c.restore()
+
+      // Sea in front of the hull, so the boat sits in the water
+      c.fillStyle = COLORS.sea
+      c.beginPath()
+      c.moveTo(0, H)
+      for (let x = 0; x <= W; x += 6) c.lineTo(x, seaY(x))
+      c.lineTo(W, H)
+      c.closePath()
+      c.globalAlpha = 0.92
+      c.fill()
+      c.globalAlpha = 1
+      c.strokeStyle = COLORS.crest
       c.lineWidth = 2
       c.beginPath()
-      c.moveTo(boat.x, by - 28)
-      c.lineTo(boat.x + 14, by - 38)
+      for (let x = 0; x <= W; x += 6) {
+        const y = seaY(x)
+        if (x === 0) c.moveTo(x, y)
+        else c.lineTo(x, y)
+      }
       c.stroke()
     }
 
-    function cast() {
-      if (ended || hooks.length >= MAX_HOOKS) return
-      hooks.push({ x: boat.x, y: H - 56 })
+    function fire() {
+      if (ended || reload > 0 || shots.length >= MAX_SHOTS) return
+      reload = RELOAD_SECONDS
+      const m = muzzle()
+      shots.push({
+        x: m.x,
+        y: m.y,
+        vx: Math.sin(boat.tilt) * SHOT_SPEED,
+        vy: -Math.cos(boat.tilt) * SHOT_SPEED,
+      })
     }
 
     function finish(won: boolean) {
@@ -218,38 +303,55 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       timeLeft -= dt
+      if (!reduceMotion) clock += dt
+      if (reload > 0) reload -= dt
+
+      // The sea roughens smoothly towards its target after each catch
+      swell += (targetSwell - swell) * Math.min(1, dt * 1.5)
 
       if (keys.ArrowLeft) boat.x -= BOAT_SPEED * dt
       if (keys.ArrowRight) boat.x += BOAT_SPEED * dt
       boat.x = Math.max(boat.w / 2 + 6, Math.min(W - boat.w / 2 - 6, boat.x))
+      updateBoat(dt)
 
+      // Blocks swim their lanes, bounce off the sides and bob; they speed up a little per catch
       const live = blocks.filter((b) => !b.caught)
       if (!reduceMotion) {
-        const speed = 70 + (total - live.length) * 6
-        let hitEdge = false
+        const pace = 1 + (total - live.length) * 0.08
         for (const b of live) {
-          b.x += dir * speed * dt
-          if (b.x < 8 || b.x + b.w > W - 8) hitEdge = true
-        }
-        if (hitEdge) {
-          dir *= -1
-          for (const b of live) {
-            b.x += dir * speed * dt * 2
-            b.y = Math.min(b.y + 10, H - 130)
+          b.x += b.vx * pace * dt
+          if (b.x < 8) {
+            b.x = 8
+            b.vx = Math.abs(b.vx)
+          } else if (b.x + b.w > W - 8) {
+            b.x = W - 8 - b.w
+            b.vx = -Math.abs(b.vx)
           }
+          b.bob = Math.sin(clock * 1.7 + b.phase) * 6
         }
       }
 
-      for (const h of hooks) h.y -= HOOK_SPEED * dt
-      hooks = hooks.filter((h) => {
-        if (h.y < 0) return false
+      // Shots fly in a straight line along the angle they were fired at
+      for (const s of shots) {
+        s.x += s.vx * dt
+        s.y += s.vy * dt
+      }
+      shots = shots.filter((s) => {
+        if (s.y < -10 || s.x < -10 || s.x > W + 10) return false
         const hit = live.find(
-          (b) => !b.caught && h.x > b.x && h.x < b.x + b.w && h.y > b.y && h.y < b.y + b.h,
+          (b) =>
+            !b.caught &&
+            s.x > b.x &&
+            s.x < b.x + b.w &&
+            s.y > b.y + b.bob - 2 &&
+            s.y < b.y + b.bob + b.h + 2,
         )
         if (!hit) return true
         hit.caught = true
         caughtCount += 1
         catchTimer = 3.5
+        if (!reduceMotion)
+          targetSwell = Math.min(SWELL_MAX, SWELL_START + caughtCount * SWELL_PER_CATCH)
         setCaught(caughtCount)
         setLastCatch(hit.s)
         track('services_game_catch', { service: hit.s.title, caught: caughtCount })
@@ -266,7 +368,7 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
         setSecondsLeft(s)
       }
 
-      draw(now)
+      draw()
       if (caughtCount === total) return finish(true)
       if (timeLeft <= 0) return finish(false)
       raf = requestAnimationFrame(tick)
@@ -278,7 +380,7 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
         keys[e.key] = true
         e.preventDefault()
       } else if (e.key === ' ' || e.key === 'ArrowUp') {
-        cast()
+        fire()
         e.preventDefault()
       } else if (e.key === 'Escape') {
         finish(false)
@@ -292,10 +394,12 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
     }
     const onPointerDown = (e: PointerEvent) => {
       boat.x = pointerX(e)
-      cast()
+      updateBoat(1)
+      fire()
     }
 
     resize()
+    updateBoat(1)
     const observer = new ResizeObserver(resize)
     observer.observe(wrap)
     canvas.addEventListener('keydown', onKeyDown)
@@ -318,18 +422,55 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
   }, [phase, round, services, total])
 
   return (
-    <div className="game-screen live" ref={wrapRef}>
-      <canvas ref={canvasRef} tabIndex={0} aria-label={text.canvasLabel} />
-      <div className="game-hud" aria-hidden="true">
-        <span>
-          {text.caught} {caught} / {total}
-        </span>
-        <span>
-          {secondsLeft}
-          {text.seconds}
-        </span>
+    <div className="game-live">
+      <div className="game-screen live" ref={wrapRef}>
+        <canvas ref={canvasRef} tabIndex={0} aria-label={text.canvasLabel} />
+        <div className="game-hud" aria-hidden="true">
+          <span>
+            {text.caught} {caught} / {total}
+          </span>
+          <span>
+            {secondsLeft}
+            {text.seconds}
+          </span>
+        </div>
+
+        {phase !== 'playing' ? (
+          <div className="game-overlay">
+            <div>
+              <p className="display">
+                {phase === 'won' ? text.wonTitle : text.lostTitle.replace('{n}', String(caught))}
+              </p>
+              <p>{phase === 'won' ? text.wonText : text.lostText}</p>
+              <div className="ctas" style={{ justifyContent: 'center', marginTop: 0 }}>
+                {phase === 'won' ? (
+                  <Link
+                    href={contactHref}
+                    className="btn btn-primary"
+                    onClick={() => track('services_game_cta_click', { caught })}
+                  >
+                    {text.cta}
+                  </Link>
+                ) : null}
+                <button
+                  type="button"
+                  className={`btn ${phase === 'won' ? 'btn-ghost' : 'btn-primary'}`}
+                  onClick={restart}
+                >
+                  {text.playAgain}
+                </button>
+                {phase === 'lost' ? (
+                  <a href={`#${listId}`} className="btn btn-ghost">
+                    {text.skip}
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
 
+      {/* Catch info sits below the screen so it never hides the boat. Space is reserved. */}
       <div className="game-catch" role="status" aria-live="polite">
         {lastCatch && phase === 'playing' ? (
           <>
@@ -344,40 +485,6 @@ export function ServicesGame({ services, text, contactHref, listId }: GameProps)
           </>
         ) : null}
       </div>
-
-      {phase !== 'playing' ? (
-        <div className="game-overlay">
-          <div>
-            <p className="display">
-              {phase === 'won' ? text.wonTitle : text.lostTitle.replace('{n}', String(caught))}
-            </p>
-            <p>{phase === 'won' ? text.wonText : text.lostText}</p>
-            <div className="ctas" style={{ justifyContent: 'center', marginTop: 0 }}>
-              {phase === 'won' ? (
-                <Link
-                  href={contactHref}
-                  className="btn btn-primary"
-                  onClick={() => track('services_game_cta_click', { caught })}
-                >
-                  {text.cta}
-                </Link>
-              ) : null}
-              <button
-                type="button"
-                className={`btn ${phase === 'won' ? 'btn-ghost' : 'btn-primary'}`}
-                onClick={restart}
-              >
-                {text.playAgain}
-              </button>
-              {phase === 'lost' ? (
-                <a href={`#${listId}`} className="btn btn-ghost">
-                  {text.skip}
-                </a>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   )
 }

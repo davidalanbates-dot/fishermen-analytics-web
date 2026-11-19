@@ -788,13 +788,14 @@ img {
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
+/* Catch info: a strip under the game screen (never over the boat), space reserved */
 .game-catch {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  max-width: 270px;
+  margin-top: 10px;
+  min-height: 64px;
   display: grid;
-  gap: 4px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 4px 14px;
+  align-items: baseline;
   font-size: 14px;
   color: var(--text-2);
 }
@@ -802,20 +803,21 @@ img {
   background: var(--surface-2);
   border: 1px solid var(--yellow);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 10px 14px;
 }
 .game-catch strong {
   font-family: var(--font-display), sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--text);
+  white-space: nowrap;
 }
 .game-catch a {
   color: var(--sky);
   font-weight: 600;
+  white-space: nowrap;
 }
 @media (max-width: 520px) {
   .game-catch {
-    left: 12px;
-    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
