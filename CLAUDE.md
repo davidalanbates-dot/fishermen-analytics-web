@@ -103,12 +103,15 @@ The site is the agency's own SEO/GEO showcase: Core Web Vitals pass on mobile; s
 
 ## Design status
 
-Not final. The user is iterating in the preview.
+**Direction chosen: B · Sonar** (19 Nov 2026), from the three options on the design canvas https://claude.ai/artifact/9FdE5Hr21uv2C3nAWXKhFP (artboard "B · Sonar"). This replaces the earlier yellow-band preview look.
 
-- Brand colours from the logo: yellow `#FFF200`, sky blue `#00A2E8`, black `#000000`, white. Use yellow as a highlight and for the header/hero band, not for large reading areas.
-- Preview fonts: Zilla Slab (display) + Work Sans (body). Provisional.
+- Dark theme: black background `#000000`, surfaces `#071015` / `#0d1418`, borders `#1f2a31`, text `#f2f5f7`, muted text `#c9d3d9` / `#a7b4bd`.
+- Brand colours from the logo: sky blue `#00A2E8` for numbers, kickers and links; yellow `#FFF200` for primary buttons, the active nav item, highlights and a thin strip on top of the header. Yellow is no longer a full header/hero band.
+- Fonts: Space Grotesk (headings, numbers, kickers) + Inter (body).
+- Shapes: rounded cards (12–20 px), pill buttons.
 - **Header:** navigation only, no logo. The official logo is used in the footer.
-- **Homepage hero:** a dedicated branding area between the navigation and the headline "Marketing that starts with the data." is still to be designed.
+- **Homepage hero branding area:** a "fish finder" sonar display with the featured results as catches, beside the Fishermen Analytics wordmark, above the headline "Marketing that starts with the data."
+- Services: game panel styled as a sonar screen; core services as highlighted cards, the other five as smaller cards.
 
 ## Assets in this folder
 
@@ -123,4 +126,3 @@ Not final. The user is iterating in the preview.
 - Email address, phone number, reply time for the enquiry form; confirm office address.
 - Team photos and bios.
 - Whether fishermen.co will link to fishermen-analytics.com.
-- Design direction for the hero branding area.

@@ -53,19 +53,19 @@ Pages, services, case studies, insights and jobs have drafts, scheduled publishi
 
 ## Useful commands
 
-| Command                          | Does                                                          |
-| -------------------------------- | ------------------------------------------------------------- |
-| `npm run dev:local`              | Start the local database, then the site and CMS               |
-| `npm run db`                     | Start only the local database                                 |
-| `npm run seed`                   | Load the agreed content into the CMS (safe to rerun)          |
-| `npm run dev`                    | Start the site and CMS against `DATABASE_URL`                 |
-| `npm run generate:types`         | Regenerate `src/payload-types.ts` after changing collections  |
-| `npm run generate:importmap`     | Regenerate the admin import map after adding admin components |
-| `npm run payload migrate:create` | Create a database migration                                   |
-| `npm run payload migrate`        | Apply migrations                                              |
-| `npm run build`                  | Production build                                              |
-| `npm run ci`                     | Apply migrations, then build (Vercel build command)           |
-| `npm run lint`                   | Lint                                                          |
+| Command                          | Does                                                              |
+| -------------------------------- | ----------------------------------------------------------------- |
+| `npm run dev:local`              | Start the local database, then the site and CMS                   |
+| `npm run db`                     | Start only the local database                                     |
+| `npm run seed`                   | Load the agreed content into the CMS (safe to rerun)              |
+| `npm run dev`                    | Start the site and CMS against `DATABASE_URL`                     |
+| `npm run generate:types`         | Regenerate `src/payload-types.ts` after changing collections      |
+| `npm run generate:importmap`     | Regenerate the admin import map after adding admin components     |
+| `npm run payload migrate:create` | Create a database migration                                       |
+| `npm run payload migrate`        | Apply migrations                                                  |
+| `npm run build`                  | Production build (reads the CMS, so the database must be running) |
+| `npm run ci`                     | Apply migrations, then build (Vercel build command)               |
+| `npm run lint`                   | Lint                                                              |
 
 ## Accounts
 

@@ -161,6 +161,10 @@ export interface Page {
   layout?:
     | (
         | {
+            /**
+             * Homepage only. The sonar shows the featured case study results.
+             */
+            brandingArea?: boolean | null;
             eyebrow?: string | null;
             heading: string;
             intro?: string | null;
@@ -1124,6 +1128,7 @@ export interface PagesSelect<T extends boolean = true> {
         hero?:
           | T
           | {
+              brandingArea?: T;
               eyebrow?: T;
               heading?: T;
               intro?: T;

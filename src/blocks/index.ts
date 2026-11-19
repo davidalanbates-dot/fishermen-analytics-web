@@ -9,6 +9,13 @@ export const HeroBlock: Block = {
   slug: 'hero',
   labels: { singular: 'Hero', plural: 'Heroes' },
   fields: [
+    {
+      name: 'brandingArea',
+      type: 'checkbox',
+      label: 'Show the sonar branding area above the heading',
+      defaultValue: false,
+      admin: { description: 'Homepage only. The sonar shows the featured case study results.' },
+    },
     { name: 'eyebrow', type: 'text', localized: true },
     { name: 'heading', type: 'text', required: true, localized: true },
     { name: 'intro', type: 'textarea', localized: true },

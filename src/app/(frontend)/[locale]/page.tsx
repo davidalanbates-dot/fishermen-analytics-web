@@ -1,49 +1,37 @@
 import type { Metadata } from 'next'
-import { localePath, type Locale } from '@/i18n/config'
+import { notFound } from 'next/navigation'
 
-/**
- * Placeholder homepage. The real homepage renders the "home" document from the Pages
- * collection (blocks: hero, services + game, featured work, awards, logos, family, enquiry form).
- */
-const copy = {
-  en: {
-    eyebrow: 'The data-led Fishermen',
-    heading: 'Marketing that starts with the data.',
-    intro:
-      'Fishermen Analytics is an independent digital marketing agency in Malaysia, founded in 2014. We turn data and user behaviour into marketing that delivers measurable results.',
-  },
-  ms: {
-    eyebrow: 'Fishermen yang berpandukan data',
-    heading: 'Pemasaran yang bermula dengan data.',
-    intro:
-      'Fishermen Analytics ialah agensi pemasaran digital bebas di Malaysia, ditubuhkan pada 2014. Kami menukar data dan tingkah laku pengguna kepada pemasaran yang memberikan hasil yang boleh diukur.',
-  },
-} satisfies Record<Locale, Record<string, string>>
+import { RenderBlocks } from '@/components/blocks/RenderBlocks'
+import { localePath, type Locale } from '@/i18n/config'
+import { getPage, mediaUrl } from '@/lib/payload'
+
+// Re-check the CMS at most once a minute. On-demand revalidation on publish comes later.
+export const revalidate = 60
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await props.params
+  const page = await getPage('home', locale)
+  const hero = page?.layout?.find((b) => b.blockType === 'hero')
+  const title = page?.meta?.title || 'Fishermen Analytics | Marketing that starts with the data.'
+  const description =
+    page?.meta?.description || (hero && 'intro' in hero ? hero.intro : undefined) || undefined
+  const image = mediaUrl(page?.meta?.image)
   return {
-    title: { absolute: `Fishermen Analytics | ${copy[locale].heading}` },
-    description: copy[locale].intro,
+    title: { absolute: title },
+    description,
     alternates: {
       canonical: localePath(locale, '/'),
       languages: { 'en-MY': '/', 'ms-MY': '/ms', 'x-default': '/' },
     },
+    openGraph: { title, description, images: image ? [image] : undefined },
   }
 }
 
 export default async function HomePage(props: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await props.params
-  const t = copy[locale]
-  return (
-    <section className="hero">
-      <div className="wrap">
-        <p className="eyebrow">{t.eyebrow}</p>
-        <h1>{t.heading}</h1>
-        <p className="lede">{t.intro}</p>
-      </div>
-    </section>
-  )
+  const page = await getPage('home', locale)
+  if (!page) notFound()
+  return <RenderBlocks blocks={page.layout ?? []} locale={locale} />
 }

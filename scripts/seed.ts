@@ -657,15 +657,18 @@ const PAGES = [
     slug: 'home',
     title: 'Home',
     layout: [
-      hero(
-        'Independent digital marketing agency · Malaysia · Since 2014',
-        'Marketing that starts with the data.',
-        'We turn data and user behaviour into insights you can act on, then put them to work across search, creative, video, social, web and media.',
-        [
-          ['Start a project', '/contact'],
-          ['See our work', '/work'],
-        ],
-      ),
+      {
+        ...hero(
+          'Independent digital marketing agency · Malaysia · Since 2014',
+          'Marketing that starts with the data.',
+          'We turn data and user behaviour into insights you can act on, then put them to work across search, creative, video, social, web and media.',
+          [
+            ['Start a project', '/contact'],
+            ['See our work', '/work'],
+          ],
+        ),
+        brandingArea: true,
+      },
       {
         blockType: 'family',
         heading: 'Part of the Fishermen family.',
