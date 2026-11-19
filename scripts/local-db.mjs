@@ -28,6 +28,9 @@ const pg = new EmbeddedPostgres({
   user: LOCAL_DB.user,
   password: LOCAL_DB.password,
   persistent: true,
+  // Always UTF-8. Without this, Windows creates a WIN1252 database that rejects
+  // characters such as → and −, and would break Bahasa Malaysia and other text.
+  initdbFlags: ['--encoding=UTF8', '--locale=C'],
   onLog: () => {},
   onError: (message) => {
     const text = String(message)

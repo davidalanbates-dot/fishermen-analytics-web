@@ -14,6 +14,7 @@ Needs Node.js 22, 24 or 26. No database install needed: a local PostgreSQL 17 ru
 npm install
 cp .env.example .env   # then set PAYLOAD_SECRET
 npm run dev:local      # starts the local database, then the site and CMS
+npm run seed           # in a second terminal: loads services, case studies, awards, logos, pages
 ```
 
 Open http://localhost:3000 for the site and http://localhost:3000/admin to create the first user
