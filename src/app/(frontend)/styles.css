@@ -757,3 +757,65 @@ img {
     display: none;
   }
 }
+
+/* Live game */
+.game-screen.live {
+  background-image: none;
+}
+.game-screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+.game-screen canvas:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: -3px;
+}
+.game-hud {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-display), sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-soft);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.game-catch {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  max-width: 270px;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+.game-catch:not(:empty) {
+  background: var(--surface-2);
+  border: 1px solid var(--yellow);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.game-catch strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: 18px;
+  color: var(--text);
+}
+.game-catch a {
+  color: var(--sky);
+  font-weight: 600;
+}
+@media (max-width: 520px) {
+  .game-catch {
+    left: 12px;
+    max-width: none;
+  }
+}

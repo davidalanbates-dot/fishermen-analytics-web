@@ -2,6 +2,8 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import Link from 'next/link'
 
+import { GameLoader } from '@/components/game/GameLoader'
+
 import { localePath } from '@/i18n/config'
 import { t } from '@/i18n/dictionary'
 import {
@@ -13,7 +15,7 @@ import {
   mediaUrl,
   populated,
 } from '@/lib/payload'
-import type { CaseStudy, Service } from '@/payload-types'
+import type { CaseStudy } from '@/payload-types'
 import type { BlockProps } from './types'
 
 function SectionHead({
@@ -54,47 +56,6 @@ export async function FamilyBlock({ block, locale }: BlockProps<'family'>) {
   )
 }
 
-/** Static sonar-screen panel. The playable game replaces this in the next build step. */
-function GamePanel({
-  services,
-  locale,
-}: {
-  services: Service[]
-  locale: BlockProps<'services'>['locale']
-}) {
-  const d = t(locale).game
-  const spots = [
-    { left: '6%', top: 44 },
-    { left: '66%', top: 52 },
-    { left: '8%', top: 250 },
-    { left: '70%', top: 262 },
-  ]
-  return (
-    <div className="game">
-      <div className="game-screen" aria-hidden="true">
-        {services.slice(0, 4).map((s, i) => (
-          <span key={s.id} className={`block-chip${s.core ? ' core' : ''}`} style={spots[i]}>
-            {s.gameLabel || s.title}
-          </span>
-        ))}
-        <div className="game-overlay">
-          <div>
-            <p className="display">{d.title}</p>
-            <p>{d.text}</p>
-            <button type="button" className="btn btn-primary" disabled title={d.comingSoon}>
-              {d.play}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div className="game-help">
-        <span>{d.help}</span>
-        <a href="#services-list">{d.skip}</a>
-      </div>
-    </div>
-  )
-}
-
 export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
   const d = t(locale)
   const services = await getServices(locale)
@@ -103,7 +64,21 @@ export async function ServicesBlock({ block, locale }: BlockProps<'services'>) {
       <div className="wrap">
         <SectionHead kicker={d.kickers.services} heading={block.heading} intro={block.intro} />
         <div className="svc-grid">
-          {block.showGame ? <GamePanel services={services} locale={locale} /> : null}
+          {block.showGame ? (
+            <GameLoader
+              listId="services-list"
+              contactHref={localePath(locale, '/contact')}
+              text={d.game}
+              services={services.map((s) => ({
+                id: s.id,
+                label: s.gameLabel || s.title,
+                title: s.title,
+                summary: s.summary,
+                href: localePath(locale, `/services/${s.slug}`),
+                core: Boolean(s.core),
+              }))}
+            />
+          ) : null}
           <ul className="svc-cards" id="services-list">
             {services.map((s) => (
               <li key={s.id} className={s.core ? 'svc-core' : undefined}>
